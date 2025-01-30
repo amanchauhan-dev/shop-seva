@@ -1,18 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ProgressBar } from "@/context/ProgressBar";
 import AuthProvider from "@/context/AuthProvider";
 import ThemeProvider from "@/context/ThemeProvider";
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import ReduxProvider from "@/context/ReduxProvider";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Shop Seva",
@@ -26,15 +18,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
-      >
-        <ThemeProvider>
-          <AuthProvider>
-            <ProgressBar className="h-1 bg-primary">{children}</ProgressBar>
-          </AuthProvider>
-        </ThemeProvider>
-      </body>
+      
+        <ReduxProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              <ProgressBar className="h-1 bg-primary">{children}</ProgressBar>
+            </AuthProvider>
+          </ThemeProvider>
+        </ReduxProvider>
     </html>
   );
 }

@@ -35,10 +35,24 @@ import { ProgressBarLink } from "@/context/ProgressBar";
 import { HTMLAttributes, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import AuthForms from "./AuthForm";
+import { useAppDispatch } from "@/hooks/redux-store";
+import { setTheme } from "@/store/slices/themeSlice";
 
 const Navbar: React.FC = () => {
   const [openMenu, setOpenMenu] = useState<boolean>(false);
   const [openAuthDialog, setOpenAuthDialog] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+
+  const handleThemeLight = () => {
+    dispatch(setTheme("light"));
+  };
+  const handleThemeDark = () => {
+    dispatch(setTheme("dark"));
+  };
+  const handleThemeSystem = () => {
+    dispatch(setTheme('system'));
+  };
+
   return (
     <section>
       <Menubar className="flex h-[54px] py-0 px-2 sm:px-10 lg:px-16 justify-between">
@@ -114,7 +128,7 @@ const Navbar: React.FC = () => {
               </MenubarItem>
             </MenubarContent>
           </MenubarMenu>
-          {/* systemTheme */}
+          {/* theme */}
           <MenubarMenu>
             <MenubarTrigger>
               {false ? <Moon size={17} /> : <Sun size={17} />}
@@ -124,21 +138,21 @@ const Navbar: React.FC = () => {
                 <MenubarRadioItem
                   value="light"
                   className="px-3 cursor-pointer"
-                  onClick={() => {}}
+                  onClick={handleThemeLight}
                 >
                   <Sun size={18} className="mr-2" /> Light
                 </MenubarRadioItem>
                 <MenubarRadioItem
                   value="dark"
                   className="px-3 cursor-pointer"
-                  onClick={() => {}}
+                  onClick={handleThemeDark}
                 >
                   <Moon size={18} className="mr-2" /> Dark
                 </MenubarRadioItem>
                 <MenubarRadioItem
                   value="system"
                   className="px-3 cursor-pointer"
-                  onClick={() => {}}
+                  onClick={handleThemeSystem}
                 >
                   <Laptop size={18} className="mr-2" /> System
                 </MenubarRadioItem>
@@ -277,7 +291,6 @@ const SideBarItem: React.FC<SideBarItemProps> = ({
 };
 
 // Profile Component
-
 
 export const Profile: React.FC = () => {
   return <div>Profile</div>;

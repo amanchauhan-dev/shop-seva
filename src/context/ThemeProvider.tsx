@@ -4,7 +4,7 @@ import {  useAppSelector } from "@/hooks/redux-store";
 import { usePrefersTheme } from "react-haiku";
 
 const ThemeProvider = ({ children }: { children?: React.ReactNode }) => {
-  let currentTheme = useAppSelector((s) => s.theme.theme);
+  const currentTheme = useAppSelector((s) => s.theme.theme);
   const theme = usePrefersTheme("light");
 
   return (

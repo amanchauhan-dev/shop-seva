@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { usePrefersTheme } from 'react-haiku';
 // Define a type for the slice state
 interface ThemeState {
     theme: "light" | 'dark' | 'system'

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ProgressBar } from "@/context/ProgressBar";
 import AuthProvider from "@/context/AuthProvider";
+import ThemeProvider from "@/context/ThemeProvider";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -28,9 +29,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
       >
-        <AuthProvider>
-          <ProgressBar className="h-1 bg-primary">{children}</ProgressBar>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <ProgressBar className="h-1 bg-primary">{children}</ProgressBar>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

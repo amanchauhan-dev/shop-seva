@@ -1,7 +1,6 @@
 import type { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GitHubProvider from 'next-auth/providers/github'
-import { pages } from "next/dist/build/templates/app-page"
 const options: NextAuthOptions = {
     pages: {
         signIn: '/',
@@ -19,7 +18,7 @@ const options: NextAuthOptions = {
                 username: { label: "Username", type: "text", placeholder: "Enter your username" },
                 password: { label: "Password", type: "password", placeholder: 'Enter your Password' }
             },
-            async authorize(credentials, req) {
+            async authorize(credentials) {
                 const userDetails = { username: 'admin', password: "admin" }
                 if (credentials?.username == userDetails.username && credentials?.password == userDetails.password) {
                     console.log('credentials', credentials);
@@ -31,7 +30,7 @@ const options: NextAuthOptions = {
         })
     ],
     callbacks: {
-        async session({ session, user }) {
+        async session({ session }) {
             return session
         },
         async jwt({ token }) {

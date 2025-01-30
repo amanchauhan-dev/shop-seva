@@ -1,4 +1,3 @@
-import SideBar from "./SideBar";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (

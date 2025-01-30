@@ -24,7 +24,7 @@ const ProgressBarContext = createContext<ReturnType<typeof useProgress> | null>(
 );
 
 export function useProgressBar() {
-  let progress = useContext(ProgressBarContext);
+  const progress = useContext(ProgressBarContext);
 
   if (progress === null) {
     throw new Error("Need to be inside provider");
@@ -40,8 +40,8 @@ export function ProgressBar({
   className: string;
   children: ReactNode;
 }) {
-  let progress = useProgress();
-  let width = useMotionTemplate`${progress.value}%`;
+  const progress = useProgress();
+  const width = useMotionTemplate`${progress.value}%`;
   
   return (
       <ProgressBarContext.Provider value={progress}>
@@ -64,8 +64,8 @@ export function ProgressBarLink({
   children,
   ...rest
 }: ComponentProps<typeof Link>) {
-  let progress = useProgressBar();
-  let router = useRouter();
+  const progress = useProgressBar();
+  const router = useRouter();
 
   return (
     <Link
@@ -90,7 +90,7 @@ function useProgress() {
     "initial" | "in-progress" | "completing" | "complete"
   >("initial");
 
-  let value = useSpring(0, {
+  const value = useSpring(0, {
     damping: 25,
     mass: 0.5,
     stiffness: 300,
@@ -104,7 +104,7 @@ function useProgress() {
         value.jump(0);
       }
 
-      let current = value.get();
+      const current = value.get();
 
       let diff;
       if (current === 0) {
@@ -170,7 +170,7 @@ function useInterval(callback: () => void, delay: number | null) {
     if (delay !== null) {
       tick();
 
-      let id = setInterval(tick, delay);
+      const id = setInterval(tick, delay);
       return () => clearInterval(id);
     }
   }, [delay]);

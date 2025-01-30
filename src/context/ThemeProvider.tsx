@@ -1,11 +1,14 @@
-import { HTMLAttributes } from "react";
+"use client";
 
-interface ThemeProviderProps extends HTMLAttributes<HTMLBodyElement> {};
+import { useEffect } from "react";
 
-const ThemeProvider: React.FC<ThemeProviderProps> = ({children,...rest}) => {
-
-  return <div>ThemeProvider</div>;
+const ThemeProvider = ({ children }: { children?: React.ReactNode }) => {
+  useEffect(() => {
+    console.log("Theme Provider");
+    const body = document.getElementsByTagName("body")[0];
+    console.log(body);
+  }, []);
+  return <>{children}</>;
 };
-
 
 export default ThemeProvider;

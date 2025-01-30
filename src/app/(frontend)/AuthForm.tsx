@@ -3,18 +3,15 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Github } from "lucide-react";
 import { useEffect, useState } from "react";
 
-interface LoginFromProps {}
 
-export const LoginFrom: React.FC<LoginFromProps> = ({}) => {
+export const LoginFrom: React.FC = ({}) => {
   return (
     <>
       <DialogHeader>
@@ -46,9 +43,8 @@ export const LoginFrom: React.FC<LoginFromProps> = ({}) => {
   );
 };
 
-interface RegisterFromProps {}
 
-export const RegisterFrom: React.FC<RegisterFromProps> = () => {
+export const RegisterFrom: React.FC = () => {
   return (
     <>
       <DialogHeader>
@@ -98,9 +94,8 @@ export const RegisterFrom: React.FC<RegisterFromProps> = () => {
   );
 };
 
-interface ProvidersProps {}
 
-const Providers: React.FC<ProvidersProps> = () => {
+const Providers: React.FC = () => {
   return (
     <>
       {/* <div className=" text-xs text-center mt-2">Login With</div> */}

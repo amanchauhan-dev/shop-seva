@@ -1,6 +1,5 @@
-interface SideBarProps {};
 
-const SideBar: React.FC<SideBarProps> = () => {
+const SideBar: React.FC = () => {
 
   return <div>SideBar</div>;
 };

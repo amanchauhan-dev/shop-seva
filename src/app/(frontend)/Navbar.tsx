@@ -35,9 +35,8 @@ import { ProgressBarLink } from "@/context/ProgressBar";
 import { HTMLAttributes, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import AuthForms from "./AuthForm";
-interface NavbarProps {}
 
-const Navbar: React.FC<NavbarProps> = () => {
+const Navbar: React.FC = () => {
   const [openMenu, setOpenMenu] = useState<boolean>(false);
   const [openAuthDialog, setOpenAuthDialog] = useState<boolean>(false);
   return (
@@ -261,6 +260,7 @@ const SideBarItem: React.FC<SideBarItemProps> = ({
     <div
       className={"border-b  w-full mb-0.5 " + className}
       onClick={() => setOpenMenu(false)}
+      {...rest}
     >
       <ProgressBarLink href={href} className="p-3 py-1 flex items-center gap-1">
         <Button
@@ -278,8 +278,7 @@ const SideBarItem: React.FC<SideBarItemProps> = ({
 
 // Profile Component
 
-interface ProfileProps {}
 
-export const Profile: React.FC<ProfileProps> = () => {
+export const Profile: React.FC = () => {
   return <div>Profile</div>;
 };

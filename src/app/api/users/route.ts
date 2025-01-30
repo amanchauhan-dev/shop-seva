@@ -1,9 +1,8 @@
-import { User } from '@/Models/User';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 // get all users
 
-export async function GET(req: NextRequest) {
+export async function GET() {
     try {
         // const user = new User()
         // user.firstName = 'John'

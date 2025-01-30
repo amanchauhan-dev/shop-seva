@@ -32,12 +32,15 @@ import {
 } from "@/components/ui/menubar";
 import { Button } from "@/components/ui/button";
 import { ProgressBarLink } from "@/context/ProgressBar";
-import { HTMLAttributes, useState } from "react";
+import { HTMLAttributes, useEffect, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Navbar: React.FC = () => {
   const [openMenu, setOpenMenu] = useState<boolean>(false);
   const [openAuthDialog, setOpenAuthDialog] = useState<boolean>(false);
+  useEffect(() => {
+    console.log(openAuthDialog);
+  }, []);
   return (
     <section className="">
       <Menubar className="flex h-[54px] py-0 px-2 sm:px-10 lg:px-16 justify-between bg-red-200">
@@ -275,7 +278,6 @@ const SideBarItem: React.FC<SideBarItemProps> = ({
 };
 
 // Profile Component
-
 
 export const Profile: React.FC = () => {
   return <div>Profile</div>;

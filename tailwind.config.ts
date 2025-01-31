@@ -10,6 +10,7 @@ export default {
 	theme: {
 		extend: {
 			colors: {
+				navigation: "var(--navigation)",
 				background: 'var(--background)',
 				foreground: 'var(--foreground)',
 				card: {

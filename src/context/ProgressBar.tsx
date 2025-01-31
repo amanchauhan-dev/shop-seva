@@ -42,20 +42,20 @@ export function ProgressBar({
 }) {
   const progress = useProgress();
   const width = useMotionTemplate`${progress.value}%`;
-  
+
   return (
-      <ProgressBarContext.Provider value={progress}>
-        <AnimatePresence onExitComplete={progress.reset}>
-          {progress.state !== "complete" && (
-            <motion.div
-              style={{ width }}
-              exit={{ opacity: 0 }}
-              className={"absolute top-0 left-0 w-[100vw] z-[999] " + className}
-            />
-          )}
-        </AnimatePresence>
-        {children}
-      </ProgressBarContext.Provider>
+    <ProgressBarContext.Provider value={progress}>
+      <AnimatePresence onExitComplete={progress.reset}>
+        {progress.state !== "complete" && (
+          <motion.div
+            style={{ width }}
+            exit={{ opacity: 0 }}
+            className={"absolute top-0 left-0 w-[100vw] !z-[999] " + className}
+          />
+        )}
+      </AnimatePresence>
+      {children}
+    </ProgressBarContext.Provider>
   );
 }
 

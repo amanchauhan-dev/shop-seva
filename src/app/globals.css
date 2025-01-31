@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    --navigation: #9a5bff;
     --background: #ecebeb; /* 0 0% 100% */
     --foreground: #1c1c1c; /* 240 10% 3.9% */
     --card: #ffffff; /* 0 0% 100% */
@@ -40,6 +41,7 @@
   }
 
   .dark {
+    --navigation:#6d28d9;
     --background: #1c1c1c; /* 240 10% 3.9% */
     --foreground: #fafafa; /* 0 0% 98% */
     --card: #1c1c1c; /* 240 10% 3.9% */
@@ -56,7 +58,7 @@
     --accent-foreground: #fafafa; /* 0 0% 98% */
     --destructive: #802020; /* 0 62.8% 30.6% */
     --destructive-foreground: #fafafa; /* 0 0% 98% */
-    --border: #272727; /* 240 3.7% 15.9% */
+    --border: #464545; /* 240 3.7% 15.9% */
     --input: #272727; /* 240 3.7% 15.9% */
     --ring: #d9d9d9; /* 240 4.9% 83.9% */
     --chart-1: #4682b4; /* 220 70% 50% */
@@ -82,4 +84,15 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+
+
+::-webkit-scrollbar{
+  width: 3px;
+  height: 3px;
+}
+
+::-webkit-scrollbar-thumb{
+  background-color: var(--border);
 }

@@ -35,22 +35,19 @@ import { ProgressBarLink } from "@/context/ProgressBar";
 import { HTMLAttributes, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import AuthForms from "./AuthForm";
-import { useAppDispatch } from "@/hooks/redux-store";
-import { setTheme } from "@/store/slices/themeSlice";
 
 const Navbar: React.FC = () => {
   const [openMenu, setOpenMenu] = useState<boolean>(false);
   const [openAuthDialog, setOpenAuthDialog] = useState<boolean>(false);
-  const dispatch = useAppDispatch();
 
   const handleThemeLight = () => {
-    dispatch(setTheme("light"));
+    // dispatch(setTheme("light"));
   };
   const handleThemeDark = () => {
-    dispatch(setTheme("dark"));
+    // dispatch(setTheme("dark"));
   };
   const handleThemeSystem = () => {
-    dispatch(setTheme('system'));
+    // dispatch(setTheme("system"));
   };
 
   return (

@@ -3,7 +3,6 @@ import "./globals.css";
 import { ProgressBar } from "@/context/ProgressBar";
 import AuthProvider from "@/context/AuthProvider";
 import ThemeProvider from "@/context/ThemeProvider";
-import ReduxProvider from "@/context/ReduxProvider";
 
 
 export const metadata: Metadata = {
@@ -18,14 +17,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      
-        <ReduxProvider>
           <ThemeProvider>
             <AuthProvider>
-              <ProgressBar className="h-1 bg-primary">{children}</ProgressBar>
+              <ProgressBar className="h-1 bg-navigation">{children}</ProgressBar>
             </AuthProvider>
           </ThemeProvider>
-        </ReduxProvider>
     </html>
   );
 }

@@ -19,6 +19,9 @@ const Header: React.FC = () => {
     }[]
   >([]);
   useEffect(() => {
+    setLocationArr([{ title: "Dashboard", url: "/dashboard" }]);
+    console.log(locationArr);
+
     console.log(window.location.pathname);
   }, [window.location]);
 

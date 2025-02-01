@@ -1,10 +1,10 @@
 'use client'
-import { AppSidebar } from "./sidebar";
 import {
   SidebarInset,
   SidebarProvider,
 } from "@/components/ui/sidebar";
 import Header from "./Header";
+import { AppSidebar } from "./sidebar";
 const Layout = ({ children }: { children: React.ReactNode }) => {
 
   return (

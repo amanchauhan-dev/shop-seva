@@ -32,22 +32,24 @@ import {
 } from "@/components/ui/menubar";
 import { Button } from "@/components/ui/button";
 import { ProgressBarLink } from "@/context/ProgressBar";
-import { HTMLAttributes, useState } from "react";
+import { HTMLAttributes, useContext, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import AuthForms from "./AuthForm";
+import { ThemeContext } from "@/context/ThemeProvider";
 
 const Navbar: React.FC = () => {
+  const {setTheme}=useContext(ThemeContext)
   const [openMenu, setOpenMenu] = useState<boolean>(false);
   const [openAuthDialog, setOpenAuthDialog] = useState<boolean>(false);
 
   const handleThemeLight = () => {
-    // dispatch(setTheme("light"));
+    setTheme('light')
   };
   const handleThemeDark = () => {
-    // dispatch(setTheme("dark"));
+    setTheme('dark')
   };
   const handleThemeSystem = () => {
-    // dispatch(setTheme("system"));
+    setTheme('system')
   };
 
   return (

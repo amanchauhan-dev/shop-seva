@@ -10,20 +10,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import ChangeTheme from "./changeTheme";
-import { useEffect, useState } from "react";
 const Header: React.FC = () => {
-  const [locationArr, setLocationArr] = useState<
-    {
-      title: string;
-      url: string;
-    }[]
-  >([]);
-  useEffect(() => {
-    setLocationArr([{ title: "Dashboard", url: "/dashboard" }]);
-    console.log(locationArr);
-
-    console.log(window.location.pathname);
-  }, [window.location]);
+   
 
   return (
     <header className="flex bg-secondary justify-between h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">

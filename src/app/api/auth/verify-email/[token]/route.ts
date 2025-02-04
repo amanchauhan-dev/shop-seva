@@ -1,7 +1,7 @@
 import sql from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server"
 
-export async function GET(req: NextRequest, query: any) {
+export async function GET(req: NextRequest, query:any) {
     try {
         const { token } = await query.params;
         // verify email 

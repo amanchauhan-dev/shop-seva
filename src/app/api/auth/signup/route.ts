@@ -26,7 +26,7 @@ export const POST = async (req: NextRequest) => {
         `
         // Send verification mail
         return NextResponse.json({ message: "User created successfully. Please verify your email.", user }, { status: 201 });
-    } catch (error: any) {
+    } catch (error) {
         return ApiErrorServer(error)
     }
 }

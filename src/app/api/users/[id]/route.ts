@@ -53,7 +53,7 @@ export const PUT = async (req: NextRequest, params: { params: any }) => {
         // )
         // returning *
         // `
-        return NextResponse.json({ message: "User Updated successfully", id })
+        return NextResponse.json({ message: "User Updated successfully", data,id })
     } catch (error) {
         return ApiErrorServer(error)
     }

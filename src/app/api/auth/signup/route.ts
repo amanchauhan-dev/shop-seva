@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { SignUpUser, SignUpUserSchema } from "@/validations/userModel";
 import sql from "@/lib/db";
 import { genSaltSync, hashSync } from 'bcrypt'
-import { SendEmailVerifyMail, transport } from "@/lib/mailer";
+import { SendEmailVerifyMail } from "@/lib/mailer";
 import { generateVerificationToken } from "@/utils/utils";
 import { ApiErrorServer } from "@/lib/ApiErrorServer";
 

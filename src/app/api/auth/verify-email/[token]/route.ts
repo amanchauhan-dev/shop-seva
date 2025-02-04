@@ -13,6 +13,6 @@ export async function GET(req: NextRequest, query: any) {
         `
         return NextResponse.json({ message: "Email verified successfully.", token,user })
     } catch (error) {
-        return NextResponse.json({ message: "Something went wrong." })
+        return NextResponse.json({ message: "Something went wrong.",error })
     }
 }

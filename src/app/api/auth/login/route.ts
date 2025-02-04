@@ -6,7 +6,6 @@ import jwt from 'jsonwebtoken'
 import { serialize } from "cookie";
 import { filterObject } from "@/lib/utils";
 import { ApiErrorServer, CustomError } from "@/lib/ApiErrorServer";
-import { NextApiResponse } from "next";
 
 export const POST = async (req: NextRequest) => {
     try {

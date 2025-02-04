@@ -35,7 +35,7 @@ export const LoginFrom: React.FC<{ setOpen: (x: boolean) => void }> = ({
   });
 
   //  login function
-  const login = async (data: any) => {
+  const login = async (data:Object) => {
     const loading = toast.loading("Please wait...");
     try {
       const res = await apiClient.post("/auth/login", data);

@@ -1,10 +1,12 @@
 import { ApiErrorServer } from "@/lib/ApiErrorServer";
 import sql from "@/lib/db";
 import { PublicUserFieldNames, UpdateUserSchema } from "@/validations/userModel";
+import { promises } from "dns";
 import { NextRequest, NextResponse } from "next/server";
+import { UUIDTypes } from "uuid";
 
 
-export async function GET(req: NextResponse, params: { params: any }) {
+export async function GET(req: NextResponse, params:any) {
     try {
         const { id } = await params.params
         const user = await sql`
@@ -53,7 +55,7 @@ export const PUT = async (req: NextRequest, params: { params: any }) => {
         // )
         // returning *
         // `
-        return NextResponse.json({ message: "User Updated successfully", data,id })
+        return NextResponse.json({ message: "User Updated successfully", data, id })
     } catch (error) {
         return ApiErrorServer(error)
     }

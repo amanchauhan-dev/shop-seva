@@ -1,17 +1,17 @@
 import { NextResponse } from "next/server";
+import { PostgresError } from "postgres";
 import { ZodError } from "zod";
 
 
 export class CustomError extends Error {
     statusCode: number;
-
     constructor(message: string, statusCode: number) {
         super(message);
         this.statusCode = statusCode;
         this.name = "CustomError";
     }
 }
-export const ApiErrorServer = (error:any) => {
+export const ApiErrorServer = (error: Error | ZodError | CustomError | PostgresError | any) => {
     // console.error(error); // Log error for debugging
     if (error instanceof ZodError) {
         return NextResponse.json({ errors: error.flatten() }, { status: 400 });
@@ -27,11 +27,11 @@ export const ApiErrorServer = (error:any) => {
         );
     }
 
-    if (error.code === '23505') {
+    if (error instanceof PostgresError && error.code === '23505') {
         return NextResponse.json({ error: "Email already exists." }, { status: 400 });
     }
 
-    if (error.code && error.code === '22P02') {
+    if (error instanceof PostgresError && error.code === '22P02') {
         return NextResponse.json({ message: "Invalid uuid" }, { status: 400 });
     }
 

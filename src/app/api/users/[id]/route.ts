@@ -1,9 +1,7 @@
 import { ApiErrorServer } from "@/lib/ApiErrorServer";
 import sql from "@/lib/db";
 import { PublicUserFieldNames, UpdateUserSchema } from "@/validations/userModel";
-import { promises } from "dns";
 import { NextRequest, NextResponse } from "next/server";
-import { UUIDTypes } from "uuid";
 
 
 export async function GET(req: NextResponse, params:any) {

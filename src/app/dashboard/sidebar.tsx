@@ -49,48 +49,48 @@ export const NavigationData = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/dashboard",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "Overall",
+          title: "Summary",
           url: "/dashboard",
         },
         {
-          title: "Analytics",
+          title: "Analytics  and Statistics",
           url: "/dashboard/analytics",
         },
         {
           title: "Accounts",
           url: "/dashboard/accounts",
         },
-        {
-          title: "Settings",
-          url: "#",
-        },
       ],
     },
     {
       title: "Inventory",
-      url: "#",
+      url: "/dashboard/inventory",
       icon: Bot,
       items: [
         {
+          title: "Summary",
+          url: "/dashboard/inventory",
+        },
+        {
           title: "Products",
-          url: "#",
+          url: "/dashboard/inventory/products",
         },
         {
           title: "Out Of Stock",
-          url: "#",
+          url: "/dashboard/inventory/out-of-stock",
         },
         {
           title: "Drafts or Inactive",
-          url: "#",
+          url: "/dashboard/inventory/draft-inactive",
         },
         {
           title: "Add Product",
-          url: "#",
+          url: "/dashboard/inventory/add-product",
         },
       ],
     },
@@ -100,49 +100,65 @@ export const NavigationData = {
       icon: Users2,
       items: [
         {
-          title: "Users",
+          title: "Summary",
           url: "/dashboard/people",
         },
         {
+          title: "Users",
+          url: "/dashboard/people/users",
+        },
+        {
           title: "Customers",
-          url: "#",
+          url: "/dashboard/people/customers",
         },
         {
           title: "Employees",
-          url: "#",
+          url: "/dashboard/people/employees",
         },
         {
           title: "Blocks or Inactive",
-          url: "#",
+          url: "/dashboard/people/block-inactive",
         },
         {
-          title: "Add",
-          url: "#",
+          title: "Add User",
+          url: "/dashboard/people/add-user",
         },
       ],
     },
     {
-      title: "Types and Categories",
-      url: "/dashboard/categories",
+      title: "Brands and Categories",
+      url: "/dashboard/brands-categories",
       icon: BookOpen,
       items: [
         {
+          title: "Summary",
+          url: "/dashboard/brands-categories",
+        },
+        {
           title: "Categories",
-          url: "#",
+          url: "/dashboard/brands-categories/categories",
+        },
+        {
+          title: "Brands",
+          url: "/dashboard/brands-categories/brands",
         },
         {
           title: "Drafts or Inactive",
-          url: "#",
+          url: "/dashboard/brands-categories/inactive-draft",
+        },
+        {
+          title: "Add Brand",
+          url: "/dashboard/brands-categories/add-brand",
         },
         {
           title: "Add Category",
-          url: "#",
+          url: "/dashboard/brands-categories/add-category",
         },
       ],
     },
     {
       title: "Settings",
-      url: "#",
+      url: "/dashboard/settings",
       icon: Settings2,
       items: [
         {
@@ -167,9 +183,8 @@ export const NavigationData = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" className="shadow-lg" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={NavigationData.teams} />
       </SidebarHeader>

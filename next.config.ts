@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  env: {
+    NEXT_SERVER_URL: process.env.NEXT_SERVER_URL,
+  },
 };
 
 export default nextConfig;

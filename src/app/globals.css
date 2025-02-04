@@ -5,7 +5,7 @@
 @layer base {
   :root {
     --navigation: #9a5bff;
-    --background: #ecebeb; /* 0 0% 100% */
+    --background: #ffffff; /* 0 0% 100% */
     --foreground: #1c1c1c; /* 240 10% 3.9% */
     --card: #ffffff; /* 0 0% 100% */
     --card-foreground: #1c1c1c; /* 240 10% 3.9% */
@@ -13,15 +13,15 @@
     --popover-foreground: #1c1c1c; /* 240 10% 3.9% */
     --primary: #15803d;
     --primary-foreground: #fafafa; /* 0 0% 98% */
-    --secondary: #ffffff; /* 240 4.8% 95.9% */
+    --secondary: #f5f2f2; /* 240 4.8% 95.9% */
     --secondary-foreground: #0d0d0d; /* 240 5.9% 10% */
     --muted: #f3f3f3; /* 240 4.8% 95.9% */
     --muted-foreground: #656565; /* 240 3.8% 46.1% */
     --accent: #dfdfdf; /* 240 4.8% 95.9% */
     --accent-foreground: #0d0d0d; /* 240 5.9% 10% */
     --destructive: #e63946; /* 0 84.2% 60.2% */
-  --destructive-foreground: #fafafa; /* 0 0% 98% */
-    --border: #c7c7c7; /* 240 5.9% 90% */
+    --destructive-foreground: #fafafa; /* 0 0% 98% */
+    --border: #c3c2c2; /* 240 5.9% 90% */
     --input: #e5e5e5; /* 240 5.9% 90% */
     --ring: #1c1c1c; /* 240 10% 3.9% */
     --chart-1: #e67700; /* 12 76% 61% */
@@ -41,7 +41,7 @@
   }
 
   .dark {
-    --navigation:#6d28d9;
+    --navigation: #6d28d9;
     --background: #1c1c1c; /* 240 10% 3.9% */
     --foreground: #fafafa; /* 0 0% 98% */
     --card: #1c1c1c; /* 240 10% 3.9% */
@@ -59,14 +59,14 @@
     --destructive: #802020; /* 0 62.8% 30.6% */
     --destructive-foreground: #fafafa; /* 0 0% 98% */
     --border: #464545; /* 240 3.7% 15.9% */
-    --input: #272727; /* 240 3.7% 15.9% */
+    --input: #383838; /* 240 3.7% 15.9% */
     --ring: #d9d9d9; /* 240 4.9% 83.9% */
     --chart-1: #4682b4; /* 220 70% 50% */
     --chart-2: #26b33d; /* 160 60% 45% */
     --chart-3: #ffcc00; /* 30 80% 55% */
     --chart-4: #b452cd; /* 280 65% 60% */
     --chart-5: #ff3366; /* 340 75% 55% */
-    --sidebar-background:var(--secondary);
+    --sidebar-background: var(--secondary);
     --sidebar-foreground: #e5e7eb;
     --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: var(--primary-foreground);
@@ -86,13 +86,11 @@
   }
 }
 
-
-
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   width: 3px;
   height: 3px;
 }
 
-::-webkit-scrollbar-thumb{
+::-webkit-scrollbar-thumb {
   background-color: var(--border);
 }

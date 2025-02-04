@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { ChevronRight, type LucideIcon } from "lucide-react"
+import { ChevronRight, type LucideIcon } from "lucide-react";
 
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+} from "@/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -16,23 +16,25 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar"
-import { ProgressBarLink } from "@/context/ProgressBar"
+} from "@/components/ui/sidebar";
+import { ProgressSideBarLink } from "@/context/ProgressBar";
+import { usePathname } from "next/navigation";
 
 export function NavMain({
   items,
 }: {
   items: {
-    title: string
-    url: string
-    icon?: LucideIcon
-    isActive?: boolean
+    title: string;
+    url: string;
+    icon?: LucideIcon;
+    isActive?: boolean;
     items?: {
-      title: string
-      url: string
-    }[]
-  }[]
+      title: string;
+      url: string;
+    }[];
+  }[];
 }) {
+  const path = usePathname();
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Options</SidebarGroupLabel>
@@ -57,9 +59,15 @@ export function NavMain({
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
-                        <ProgressBarLink href={subItem.url}>
+                        <ProgressSideBarLink
+                          className={` ${
+                            path == subItem.url ? "!text-primary" : ""
+                          }`}
+                          type="sidebar"
+                          href={`${subItem.url}`}
+                        >
                           <span>{subItem.title}</span>
-                        </ProgressBarLink>
+                        </ProgressSideBarLink>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}
@@ -70,5 +78,5 @@ export function NavMain({
         ))}
       </SidebarMenu>
     </SidebarGroup>
-  )
+  );
 }

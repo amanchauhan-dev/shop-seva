@@ -5,16 +5,14 @@ import {
   Cuboid,
   Heart,
   HelpingHand,
-  Laptop,
   Locate,
   LogIn,
   LogOut,
   LogOutIcon,
   Menu,
-  Moon,
   Settings,
   ShoppingBasket,
-  Sun,
+  User,
   User2,
   X,
 } from "lucide-react";
@@ -25,8 +23,6 @@ import {
   MenubarGroup,
   MenubarItem,
   MenubarMenu,
-  MenubarRadioGroup,
-  MenubarRadioItem,
   MenubarSeparator,
   MenubarTrigger,
 } from "@/components/ui/menubar";
@@ -35,22 +31,13 @@ import { ProgressBarLink } from "@/context/ProgressBar";
 import { HTMLAttributes, useContext, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import AuthForms from "./AuthForm";
-import { ThemeContext } from "@/context/ThemeProvider";
+import { ThemeSwitcher } from "@/components/theme-switcher";
+import { AuthContext } from "@/context/AuthProvider";
 
 const Navbar: React.FC = () => {
-  const {setTheme}=useContext(ThemeContext)
   const [openMenu, setOpenMenu] = useState<boolean>(false);
   const [openAuthDialog, setOpenAuthDialog] = useState<boolean>(false);
-
-  const handleThemeLight = () => {
-    setTheme('light')
-  };
-  const handleThemeDark = () => {
-    setTheme('dark')
-  };
-  const handleThemeSystem = () => {
-    setTheme('system')
-  };
+  const { isLoggedIn } = useContext(AuthContext);
 
   return (
     <section>
@@ -79,31 +66,33 @@ const Navbar: React.FC = () => {
               </Button>
             </ProgressBarLink>
           </MenubarMenu>
-          {/* Profile */}
-          {/* <MenubarMenu>
-            <ProgressBarLink href={"wish-list"}>
+          {isLoggedIn ? (
+            <MenubarMenu>
+              <ProgressBarLink href={"wish-list"}>
+                <Button
+                  variant={"outline"}
+                  className="rounded-full"
+                  size={"icon"}
+                >
+                  <User size={24} />
+                </Button>
+              </ProgressBarLink>
+            </MenubarMenu>
+          ) : (
+            <MenubarMenu>
               <Button
                 variant={"outline"}
-                className="rounded-full"
+                onClick={() => {
+                  setOpenAuthDialog(true);
+                }}
                 size={"icon"}
+                className="w-fit px-2"
               >
-                <User size={24} />
+                <LogIn size={24} /> Sign In
               </Button>
-            </ProgressBarLink>
-          </MenubarMenu> */}
-          {/* Login */}
-          <MenubarMenu>
-            <Button
-              variant={"outline"}
-              onClick={() => {
-                setOpenAuthDialog(true);
-              }}
-              size={"icon"}
-              className="w-fit px-2"
-            >
-              <LogIn size={24} /> Sign In
-            </Button>
-          </MenubarMenu>
+            </MenubarMenu>
+          )}
+
           {/* More */}
           <MenubarMenu>
             <MenubarTrigger className=" h-9">
@@ -129,34 +118,7 @@ const Navbar: React.FC = () => {
           </MenubarMenu>
           {/* theme */}
           <MenubarMenu>
-            <MenubarTrigger>
-              {false ? <Moon size={17} /> : <Sun size={17} />}
-            </MenubarTrigger>
-            <MenubarContent className="px-0">
-              <MenubarRadioGroup value="systemTheme">
-                <MenubarRadioItem
-                  value="light"
-                  className="px-3 cursor-pointer"
-                  onClick={handleThemeLight}
-                >
-                  <Sun size={18} className="mr-2" /> Light
-                </MenubarRadioItem>
-                <MenubarRadioItem
-                  value="dark"
-                  className="px-3 cursor-pointer"
-                  onClick={handleThemeDark}
-                >
-                  <Moon size={18} className="mr-2" /> Dark
-                </MenubarRadioItem>
-                <MenubarRadioItem
-                  value="system"
-                  className="px-3 cursor-pointer"
-                  onClick={handleThemeSystem}
-                >
-                  <Laptop size={18} className="mr-2" /> System
-                </MenubarRadioItem>
-              </MenubarRadioGroup>
-            </MenubarContent>
+            <ThemeSwitcher />
           </MenubarMenu>
         </MenubarGroup>
         {/* Menu bar */}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useSidebar } from "@/components/ui/sidebar";
 import {
   AnimatePresence,
   motion,
@@ -66,12 +67,40 @@ export function ProgressBarLink({
 }: ComponentProps<typeof Link>) {
   const progress = useProgressBar();
   const router = useRouter();
-
   return (
     <Link
       href={href}
       onClick={(e) => {
         e.preventDefault();
+        progress.start();
+        startTransition(() => {
+          router.push(href.toString());
+          progress.done();
+        });
+      }}
+      {...rest}
+    >
+      {children}
+    </Link>
+  );
+}
+
+export function ProgressSideBarLink({
+  href,
+  children,
+  ...rest
+}:  ComponentProps<typeof Link>) {
+  const progress = useProgressBar();
+  const router = useRouter();
+  const { isMobile, setOpenMobile } = useSidebar();
+  return (
+    <Link
+      href={href}
+      onClick={(e) => {
+        e.preventDefault();
+        if (isMobile) {
+          setOpenMobile(false);
+        }
         progress.start();
         startTransition(() => {
           router.push(href.toString());

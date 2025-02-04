@@ -11,7 +11,7 @@ export class CustomError extends Error {
         this.name = "CustomError";
     }
 }
-export const ApiErrorServer = (error: any) => {
+export const ApiErrorServer = (error:any) => {
     // console.error(error); // Log error for debugging
     if (error instanceof ZodError) {
         return NextResponse.json({ errors: error.flatten() }, { status: 400 });

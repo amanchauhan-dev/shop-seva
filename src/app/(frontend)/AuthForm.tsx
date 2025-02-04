@@ -137,8 +137,7 @@ export const RegisterFrom: React.FC = () => {
     resolver: zodResolver(SignupFormSchema),
   });
 
-  const handleSignup = (data: any) => {
-    console.log(data);
+  const handleSignup = () => {
   };
   return (
     <>

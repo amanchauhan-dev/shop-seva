@@ -11,8 +11,8 @@ export async function GET(req: NextRequest, query: any) {
             WHERE email_verify_token = ${token}
             RETURNING *
         `
-        return NextResponse.json({ message: "Email verified successfully.", token })
-    } catch (error: any) {
+        return NextResponse.json({ message: "Email verified successfully.", token,user })
+    } catch (error) {
         return NextResponse.json({ message: "Something went wrong." })
     }
 }

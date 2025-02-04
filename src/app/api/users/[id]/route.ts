@@ -2,7 +2,6 @@ import { ApiErrorServer } from "@/lib/ApiErrorServer";
 import sql from "@/lib/db";
 import { PublicUserFieldNames, UpdateUserSchema } from "@/validations/userModel";
 import { NextRequest, NextResponse } from "next/server";
-import { ZodError } from "zod";
 
 
 export async function GET(req: NextResponse, params: { params: any }) {
@@ -15,7 +14,7 @@ export async function GET(req: NextResponse, params: { params: any }) {
             return NextResponse.json({ message: "User not found" });
         }
         return NextResponse.json({ message: "User found", user: user[0] });
-    } catch (error: any) {
+    } catch (error) {
         return ApiErrorServer(error)
     }
 
@@ -55,7 +54,7 @@ export const PUT = async (req: NextRequest, params: { params: any }) => {
         // returning *
         // `
         return NextResponse.json({ message: "User Updated successfully", id })
-    } catch (error: any) {
+    } catch (error) {
         return ApiErrorServer(error)
     }
 }

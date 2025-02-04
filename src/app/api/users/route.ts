@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
 
         }
         return NextResponse.json({ message: "User found", length: users.length, page: page, limit: limit, filter: queryParams, users });
-    } catch (error: any) {
+    } catch (error) {
         return ApiErrorServer(error)
     }
 }
@@ -60,7 +60,7 @@ export const POST = async (req: NextRequest) => {
         const salt = genSaltSync(10);
         const hashPassword = hashSync(data.password, salt)
 
-        const user = await sql`
+        await sql`
         INSERT INTO users 
         (
         full_name,
@@ -88,7 +88,7 @@ export const POST = async (req: NextRequest) => {
         returning *
         `
         return NextResponse.json({ message: "User created successfully" })
-    } catch (error: any) {
+    } catch (error) {
         return ApiErrorServer(error)
     }
 }

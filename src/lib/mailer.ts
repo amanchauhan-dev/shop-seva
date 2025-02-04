@@ -22,5 +22,6 @@ export const SendEmailVerifyMail = async (email: string, token: string, emailCal
             html: `<p>Click <a href="${verifyUrl}">here</a> to verify your email.</p>`,
         })
     } catch (error) {
+        console.log('error',error);
     }
 }

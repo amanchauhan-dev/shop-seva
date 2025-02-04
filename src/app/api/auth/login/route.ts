@@ -8,7 +8,7 @@ import { filterObject } from "@/lib/utils";
 import { ApiErrorServer, CustomError } from "@/lib/ApiErrorServer";
 import { NextApiResponse } from "next";
 
-export const POST = async (req: NextRequest, res: NextApiResponse) => {
+export const POST = async (req: NextRequest) => {
     try {
         const url = new URL(req.url);
         const { rememberMe } = Object.fromEntries(url.searchParams.entries());
@@ -58,7 +58,7 @@ export const POST = async (req: NextRequest, res: NextApiResponse) => {
         );
         return response;
 
-    } catch (error: any) {
+    } catch (error) {
         return ApiErrorServer(error)
     }
 }

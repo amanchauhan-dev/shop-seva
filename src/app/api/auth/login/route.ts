@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { LoginUserSchema, PublicUserFieldNames, User } from "@/validations/userModel";
+import { LoginUserSchema, User } from "@/validations/userModel";
 import sql from "@/lib/db";
 import { compareSync } from "bcrypt";
 import jwt from 'jsonwebtoken'
 import { serialize } from "cookie";
-import { filterObject } from "@/lib/utils";
 import { ApiErrorServer, CustomError } from "@/lib/ApiErrorServer";
 
 export const POST = async (req: NextRequest) => {
@@ -43,8 +42,8 @@ export const POST = async (req: NextRequest) => {
             cookieExpire = 7 * 24 * 60 * 60;
         }
 
-        const newUser = filterObject(user[0], PublicUserFieldNames)
-        const response = NextResponse.json({ message: "Login successful", user: newUser });
+        // const newUser = filterObject(user[0], PublicUserFieldNames)
+        const response = NextResponse.json({ message: "Login successful", user: user });
         response.headers.set(
             "Set-Cookie",
             serialize("accessToken", accessToken, {

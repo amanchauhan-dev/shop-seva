@@ -4,7 +4,7 @@ import { PublicUserFieldNames, UpdateUserSchema } from "@/validations/userModel"
 import { NextRequest, NextResponse } from "next/server";
 
 
-export async function GET(req: NextResponse, params:any) {
+export async function GET(req: NextRequest, params:any) {
     try {
         const { id } = await params
         const user = await sql`

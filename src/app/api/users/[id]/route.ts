@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextResponse, params:any) {
     try {
-        const { id } = await params.params
+        const { id } = await params
         const user = await sql`
         SELECT ${sql(PublicUserFieldNames)} FROM users WHERE id = ${id}
         `

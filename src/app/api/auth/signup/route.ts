@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { SignUpUser, SignUpUserSchema } from "@/validations/userModel";
+import { SignUpUser, SignUpUserSchema, Users } from "@/validations/userModel";
 import sql from "@/lib/db";
 import { genSaltSync, hashSync } from 'bcrypt'
 import { SendEmailVerifyMail } from "@/lib/mailer";
-import { generateVerificationToken } from "@/utils/utils";
 import { ApiErrorServer } from "@/lib/ApiErrorServer";
-
+import jwt from 'jsonwebtoken'
 export const POST = async (req: NextRequest) => {
     try {
         const body = await req.json()
@@ -14,18 +13,22 @@ export const POST = async (req: NextRequest) => {
         const salt = genSaltSync(10)
         const hashedPassword = hashSync(data.password, salt)
         // create email verify token
-        const token = generateVerificationToken()
-        await SendEmailVerifyMail(data.email, token, 'http://localhost:3000/api/verify-email')
-        
+        const token = jwt.sign(
+            { email: data.email },
+            process.env.JWT_SECRET!,
+            { expiresIn: '1h', });
+
         // save user in database
-        const user = await sql`
-                            INSERT INTO users
-                                (full_name, email, password, phone_number,email_verify_token)
-                                VALUES (${data.full_name}, ${data.email}, ${hashedPassword}, ${data.phone_number},${token})
-                            returning *
+        const user: Users[] = await sql`
+        INSERT INTO users
+        (full_name, email, password, phone_number,email_verify_token)
+        VALUES (${data.full_name}, ${data.email}, ${hashedPassword}, ${data.phone_number},${token})
+        returning *
         `
+
+        await SendEmailVerifyMail(data.email, token, data.email_callback_url || process.env.NEXT_PUBLIC_SERVER_URL + '/api/auth/verify-email')
         // Send verification mail
-        return NextResponse.json({ message: "User created successfully. Please verify your email.", user }, { status: 201 });
+        return NextResponse.json({ message: "User created successfully. Please verify your email." }, { status: 201 });
     } catch (error) {
         return ApiErrorServer(error)
     }

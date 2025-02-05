@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 
-export const filterObject = (obj: Record<string, string>, keys: string[]) => {
+export const filterObject = (obj: Record<string, any>, keys: string[]) => {
   return keys.reduce((acc, key) => {
     if (key in obj) acc[key] = obj[key];
     return acc;

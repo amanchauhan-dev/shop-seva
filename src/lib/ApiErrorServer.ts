@@ -10,13 +10,13 @@ export class CustomError extends Error {
         this.name = "CustomError";
     }
 }
-export const ApiErrorServer = (error: Error | ZodError | CustomError  | any) => {
+export const ApiErrorServer = (error: any) => {
     // console.error(error); // Log error for debugging
     if (error instanceof ZodError) {
         return NextResponse.json({ errors: error.flatten() }, { status: 400 });
     }
     if (error.message == 'Unexpected end of JSON input') {
-        return NextResponse.json({ error: "Make sure to provide body data or empty body {}" }, { status: 400 });
+        return NextResponse.json({ error: "Fields are required", message: 'To know fields leave request body {}' }, { status: 400 });
     }
 
     if (error instanceof CustomError) {
@@ -30,9 +30,12 @@ export const ApiErrorServer = (error: Error | ZodError | CustomError  | any) => 
         return NextResponse.json({ error: "Email already exists." }, { status: 400 });
     }
 
-    if ( error.code === '22P02') {
+    if (error.code === '22P02') {
         return NextResponse.json({ message: "Invalid uuid" }, { status: 400 });
     }
+    if (error.message === 'invalid token') {
+        return NextResponse.json({ message: "Invalid token" }, { status: 400 });
+    }
 
-    return NextResponse.json({ error: "Something went wrong." }, { status: 500 });
+    return NextResponse.json({ error: "Something went wrong.", detail: error }, { status: 500 });
 };

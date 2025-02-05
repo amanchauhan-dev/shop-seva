@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { LoginUserSchema, User } from "@/validations/userModel";
+import { LoginUserSchema, PublicUserFieldNames, User, Users } from "@/validations/userModel";
 import sql from "@/lib/db";
 import { compareSync } from "bcrypt";
 import jwt from 'jsonwebtoken'
 import { serialize } from "cookie";
 import { ApiErrorServer, CustomError } from "@/lib/ApiErrorServer";
+import { filterObject } from "@/lib/utils";
 
 export const POST = async (req: NextRequest) => {
     try {
@@ -17,8 +18,9 @@ export const POST = async (req: NextRequest) => {
         const user: User = await sql`
                 SELECT *
                 FROM users 
-                WHERE email = ${data.email}
+                WHERE email = ${data.email} AND email_verified = true
         `
+
         if (user.length == 0) {
             throw new CustomError('Either email or password is wrong', 400)
         }
@@ -27,23 +29,33 @@ export const POST = async (req: NextRequest) => {
         if (isAuth == false) {
             throw new CustomError('Either email or password is wrong', 400)
         }
+
         // create token
         let accessToken = jwt.sign(
-            { userId: user[0].id, email: user[0].email, role: user[0].role },
+            { id: user[0].id, email: user[0].email, role: user[0].role },
             process.env.JWT_SECRET!,
             { expiresIn: '1h', });
-
         let cookieExpire = 60 * 60;
         if (rememberMe && rememberMe == 'true') {
             accessToken = jwt.sign(
-                { userId: user[0].id, email: user[0].email, role: user[0].role },
+                { id: user[0].id, email: user[0].email, role: user[0].role },
                 process.env.JWT_SECRET!,
                 { expiresIn: '7d', });
             cookieExpire = 7 * 24 * 60 * 60;
         }
 
-        // const newUser = filterObject(user[0], PublicUserFieldNames)
-        const response = NextResponse.json({ message: "Login successful", user: user });
+        // set last login 
+        const date = new Date(Date.now())
+        await sql`
+            UPDATE users 
+            SET last_login = ${date}
+            WHERE id = ${user[0].id}
+            `
+        // filter data
+
+        const newUser = filterObject(user[0], PublicUserFieldNames)
+        // set cookies and send response 
+        const response = NextResponse.json({ message: "Login successful", user: newUser });
         response.headers.set(
             "Set-Cookie",
             serialize("accessToken", accessToken, {

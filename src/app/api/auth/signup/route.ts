@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { SignUpUser, SignUpUserSchema, Users } from "@/validations/userModel";
+import { SignUpUser, SignUpUserSchema } from "@/validations/userModel";
 import sql from "@/lib/db";
 import { genSaltSync, hashSync } from 'bcrypt'
 import { SendEmailVerifyMail } from "@/lib/mailer";
@@ -19,7 +19,7 @@ export const POST = async (req: NextRequest) => {
             { expiresIn: '1h', });
 
         // save user in database
-        const user: Users[] = await sql`
+        await sql`
         INSERT INTO users
         (full_name, email, password, phone_number,email_verify_token)
         VALUES (${data.full_name}, ${data.email}, ${hashedPassword}, ${data.phone_number},${token})

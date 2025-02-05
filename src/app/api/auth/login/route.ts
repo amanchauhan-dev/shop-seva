@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { LoginUserSchema, PublicUserFieldNames, User, Users } from "@/validations/userModel";
+import { LoginUserSchema, PublicUserFieldNames, User } from "@/validations/userModel";
 import sql from "@/lib/db";
 import { compareSync } from "bcrypt";
 import jwt from 'jsonwebtoken'

@@ -30,7 +30,13 @@ export const PrivateFields = ["password", 'forgot_password_token', 'email_verify
 
 export const PublicUserFieldNames = ['id', 'created_at', 'full_name', 'email', 'phone_number', 'date_of_birth', 'gender', 'avatar', 'role', 'last_login', 'email_verified']
 
-
+export const FilterUserSchema = z.object({
+    role: z.enum(["customer", "admin", "owner"]).optional(),
+    email_verified: z.preprocess((v) => v === "true", z.boolean()).optional(),
+    search: z.string().optional(),
+    page: z.preprocess((v) => Number(v), z.number().int().positive().default(1)),
+    limit: z.preprocess((v) => Number(v), z.number().int().positive().max(100).default(10)),
+});
 
 // Actual Schema
 

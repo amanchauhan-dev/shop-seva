@@ -3,7 +3,7 @@ import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
 
 export const apiClient = axios.create({
-    baseURL: `${process.env.NEXT_PUBLIC_SERVER_URL}/api`, // Removed extra space
+    baseURL: `/api`, // Removed extra space
     headers: {
         'Content-Type': 'application/json',
     },

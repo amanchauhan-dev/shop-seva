@@ -38,7 +38,7 @@ const Pagination: React.FC<PaginationProps> = ({
         <Select
           value={limit.toString()}
           onValueChange={(e: any) => {
-            !isNaN(e) && setLimit(e);
+            if(!isNaN(e))  setLimit(e);
           }}
         >
           <SelectTrigger className="w-[130px] m-auto border-0">

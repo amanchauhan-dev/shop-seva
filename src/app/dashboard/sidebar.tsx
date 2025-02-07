@@ -2,13 +2,12 @@
 
 import {
   AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
   GalleryVerticalEnd,
-  Settings2,
-  SquareTerminal,
   Users2,
+  LayoutDashboard,
+  Database,
+  Grid,
+  Settings
 } from "lucide-react";
 
 import { NavMain } from "./nav-main";
@@ -42,7 +41,7 @@ export const NavigationData = {
     },
     {
       name: "Evil Corp.",
-      logo: Command,
+      logo: LayoutDashboard,
       plan: "Free",
     },
   ],
@@ -50,7 +49,7 @@ export const NavigationData = {
     {
       title: "Dashboard",
       url: "/dashboard",
-      icon: SquareTerminal,
+      icon: LayoutDashboard,
       isActive: true,
       items: [
         {
@@ -70,7 +69,7 @@ export const NavigationData = {
     {
       title: "Inventory",
       url: "/dashboard/inventory",
-      icon: Bot,
+      icon: Database,
       items: [
         {
           title: "Summary",
@@ -128,7 +127,7 @@ export const NavigationData = {
     {
       title: "Brands and Categories",
       url: "/dashboard/brands-categories",
-      icon: BookOpen,
+      icon: Grid,
       items: [
         {
           title: "Summary",
@@ -159,7 +158,7 @@ export const NavigationData = {
     {
       title: "Settings",
       url: "/dashboard/settings",
-      icon: Settings2,
+      icon: Settings,
       items: [
         {
           title: "General",

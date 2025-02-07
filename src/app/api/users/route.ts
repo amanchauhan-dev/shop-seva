@@ -29,7 +29,8 @@ export async function GET(req: NextRequest) {
             }
         }
 
-        const users = await sql`SELECT 
+        const users = await sql`
+                SELECT 
                 ${sql(PublicUserFieldNames)} 
                 FROM users 
                     ${whereQuery} 
@@ -38,11 +39,18 @@ export async function GET(req: NextRequest) {
                 LIMIT ${limit} 
                 OFFSET ${offset}
                 `
-        if (users.length == 0) {
-            return NextResponse.json({ message: "User not found" });
+        const total = await sql`
+                SELECT 
+                COUNT(id) as count
+                FROM users 
+                    ${whereQuery}
+                `
 
+        if (users.length == 0) {
+            return NextResponse.json({ message: "User not found", users: [] });
         }
-        return NextResponse.json({ message: "User found", length: users.length, page: page, limit: limit, filter: queryParams, users });
+
+        return NextResponse.json({ message: "User found", length: users.length, total: total[0].count, page: page, limit: limit, filter: queryParams, users });
     } catch (error) {
         return ApiErrorServer(error)
     }

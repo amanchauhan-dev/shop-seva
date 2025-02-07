@@ -1,8 +1,8 @@
+import UserTable from "./PageTable";
+
 
 const Page: React.FC = () => {
-
-  return <div>Page</div>;
+  return <UserTable />;
 };
-
 
 export default Page;

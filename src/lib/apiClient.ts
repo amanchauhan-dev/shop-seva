@@ -8,11 +8,12 @@ export const apiClient = axios.create({
         'Content-Type': 'application/json',
     },
     withCredentials: true,
-    timeout: 5000,
+    timeout: 10000,
 });
 
 // Global error handler
 export const handleApiError = (error: unknown, toastId?: string) => {
+    console.log('error', error);
     let errorMessage = "Something went wrong!";
     if (error instanceof AxiosError) {
         if (error.response) {

@@ -1,8 +1,11 @@
+import PageTable from "./PageTable";
 
 const Page: React.FC = () => {
-
-  return <div>Page</div>;
+  return (
+    <div>
+      <PageTable />
+    </div>
+  );
 };
-
 
 export default Page;

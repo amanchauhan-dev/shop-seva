@@ -1,5 +1,10 @@
+
 const PeoplePage = () => {
-  return <div>PeoplePage</div>;
+  return (
+    <div>
+      summary
+    </div>
+  );
 };
 
 export default PeoplePage;

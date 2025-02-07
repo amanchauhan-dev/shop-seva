@@ -26,10 +26,10 @@ const Pagination: React.FC<PaginationProps> = ({
   setLimit,
 }) => {
   const handleNext = () => {
-    currentPage < total && setCurrentPage((x) => x + 1);
+    if (currentPage < total) setCurrentPage((x) => x + 1);
   };
   const handlePrev = () => {
-    currentPage > 0 && setCurrentPage((x) => x - 1);
+    if (currentPage > 0) setCurrentPage((x) => x - 1);
   };
   return (
     <div className="flex justify-end gap-2 ">

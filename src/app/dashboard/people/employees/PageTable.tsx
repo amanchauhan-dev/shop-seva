@@ -35,9 +35,8 @@ const PageTable: React.FC = () => {
         setCurrentPage(1);
         return;
       }
-
-      // setUsers([...data?.users]);
-      // setTotalPage(Math.ceil(data.total / limit));
+      setUsers([...data?.users]);
+      setTotalPage(Math.ceil(data.total / limit));
     } catch (error: any) {
       handleApiError(error);
       setLoading(false);

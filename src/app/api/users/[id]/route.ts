@@ -66,9 +66,9 @@ export const PUT = async (req: NextRequest, context:any) => {
 
 
 
-export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, context: any ) {
     try {
-        const { id } = context.params;
+        const { id } = await context.params;
         const data = await sql`
         DELETE FROM users WHERE id = ${id}
         returning *

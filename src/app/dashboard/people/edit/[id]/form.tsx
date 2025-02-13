@@ -28,6 +28,7 @@ import { apiClient, handleApiError } from "@/lib/apiClient";
 import toast from "react-hot-toast";
 import { useParams } from "next/navigation";
 import { formatDate } from "@/lib/dateFunctions";
+import Image from "next/image";
 
 const UpdateFormSchema = z.object({
   full_name: z
@@ -157,7 +158,7 @@ const UpdateUserForm: React.FC = () => {
           <div className="col-span-1 mx-auto text-center">
             <div className="w-40 h-40 sm:w-36 sm:h-36 lg:w-44 lg:h-44 rounded-full bg-secondary mx-auto overflow-hidden flex items-center justify-center">
               {preview ? (
-                <img
+                <Image
                   src={preview}
                   alt="Avatar Preview"
                   className="w-full h-full object-cover"

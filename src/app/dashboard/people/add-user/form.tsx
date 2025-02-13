@@ -26,6 +26,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { apiClient, handleApiError } from "@/lib/apiClient";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 const AddUserFormSchema = z
   .object({
@@ -140,7 +141,7 @@ const AddUserForm: React.FC = () => {
           <div className="col-span-1 mx-auto text-center">
             <div className="w-40 h-40 sm:w-36 sm:h-36 lg:w-44 lg:h-44 rounded-full bg-secondary mx-auto overflow-hidden flex items-center justify-center">
               {preview ? (
-                <img
+                <Image
                   src={preview}
                   alt="Avatar Preview"
                   className="w-full h-full object-cover"

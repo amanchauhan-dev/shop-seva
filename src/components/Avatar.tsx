@@ -16,7 +16,7 @@ const Avatar: React.FC<AvatarProps> = ({
   height = 20,
   textSize = 8,
 }) => {
-  let shortName = alt.split(" ").map((e, i) => {
+  const shortName = alt.split(" ").map((e) => {
     return e.charAt(0);
   });
 

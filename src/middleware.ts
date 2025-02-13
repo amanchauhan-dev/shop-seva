@@ -13,7 +13,7 @@ export async function middleware(request: NextRequest) {
                 return NextResponse.rewrite(new URL('/', request.url))
             }
         } catch (error: any) {
-            return NextResponse.rewrite(new URL('/', request.url))
+            return NextResponse.rewrite(new URL('/?error=' + error.message, request.url))
         }
     }
 

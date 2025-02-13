@@ -23,36 +23,7 @@ interface Category {
   sub_category?: Category[];
 }
 
-const components: Category[] = [
-  {
-    category_name: "Fashion & wears",
-    url: "",
-    sub_category: [
-      {
-        category_name: "Men",
-        url: "",
-        icons: User,
-        sub_category: [
-          {
-            category_name: "Shirt",
-          },
-          {
-            category_name: "Pants",
-          },
-          {
-            category_name: "T-Shirt",
-          },
-          {
-            category_name: "Kurta",
-          },
-          {
-            category_name: "Jacket",
-          },
-        ],
-      },
-    ],
-  },
-];
+
 
 export default function NavigationMenuBar() {
   return (

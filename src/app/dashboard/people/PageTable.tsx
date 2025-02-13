@@ -71,7 +71,7 @@ const PageTable: React.FC<{ role?: string }> = ({ role }) => {
   }, []);
   useEffect(() => {
     FetchUsers();
-  }, [currentPage, limit,FetchUsers]);
+  }, [currentPage, limit]);
 
   if (!hydrate)
     return (

@@ -1,5 +1,7 @@
 import { ApiErrorServer } from '@/lib/ApiErrorServer';
 import sql from '@/lib/db';
+import { saveFiles } from '@/lib/uploader';
+import { filterObject } from '@/lib/utils';
 import { AddUserSchema, FilterUserSchema, PublicUserFieldNames } from '@/validations/userModel';
 import { genSaltSync, hashSync } from 'bcrypt';
 import { NextRequest, NextResponse } from 'next/server';
@@ -61,14 +63,28 @@ export async function GET(req: NextRequest) {
 
 export const POST = async (req: NextRequest) => {
     try {
-        const body = await req.json();
+        const form = await req.formData();
+        const file = form.get("avatar") as File | null;
         // validate
-        const data = AddUserSchema.parse(body)
+        const data = AddUserSchema.parse({
+            full_name: form.get('full_name'),
+            email: form.get('email'),
+            password: form.get('password'),
+            gender: form.get('gender'),
+            role: form.get('role'),
+            phone_number: form.get('phone_number'),
+            avatar: file
+        })
+        let uploadResponse = null
+        if (file) {
+            uploadResponse = await saveFiles(file)
+            uploadResponse = uploadResponse[0]
+        }
         // create user
         const salt = genSaltSync(10);
         const hashPassword = hashSync(data.password, salt)
 
-        await sql`
+        const result = await sql`
         INSERT INTO users 
         (
         full_name,
@@ -85,17 +101,18 @@ export const POST = async (req: NextRequest) => {
         (
         ${data.full_name},
         ${data.email},
-        ${data.phone_number},
+        ${data.phone_number || null},
         ${hashPassword},
-        ${data.date_of_birth},
-        ${data.avatar},
-        ${data.gender},
-        ${data.role},
+        ${data.date_of_birth || null},
+        ${uploadResponse},
+        ${data.gender || null},
+        ${data.role || "customer"},
         ${true}
         )
         returning *
         `
-        return NextResponse.json({ message: "User created successfully" })
+        const createdUser = filterObject(result[0], PublicUserFieldNames)
+        return NextResponse.json({ message: "User created successfully", user: createdUser, data })
     } catch (error) {
         return ApiErrorServer(error)
     }

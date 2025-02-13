@@ -59,7 +59,7 @@ const Pagination: React.FC<PaginationProps> = ({
         {currentPage} of {total}
       </div>
 
-      {currentPage < total && currentPage != 1 && (
+      { currentPage != 1 && (
         <Button className="" variant={"outline"} onClick={handlePrev}>
           Previous
         </Button>

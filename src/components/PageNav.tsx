@@ -13,17 +13,17 @@ interface PageNavProps {
 
 const PageNav: React.FC<PageNavProps> = ({ data }) => {
   const path = usePathname();
-  
+
   return (
-    <div className="flex gap-3 flex-wrap max-sm:justify-center mb-4">
+    <div className="flex max-sm:justify-center flex-wrap gap-1 mb-4 overflow-auto">
       {data.length > 0 &&
         data.map((e, i) => {
           return (
             <ProgressBarLink
               key={i}
               className={`${
-                path == e.url ? "bg-transparent " : "bg-sidebar"
-              } hover:bg-transparent transition-colors shadow-md  p-0.5 sm:p-1.5 rounded-md px-2 sm:px-3 border-2 border-sidebar `}
+                path == e.url ? "bg-primary text-white" : "bg-sidebar hover:bg-transparent"
+              }  transition-colors shadow-md rounded  p-0.5 sm:p-1.5 whitespace-nowrap  px-2 sm:px-3 border-2 border-sidebar `}
               href={e.url}
             >
               {e.title}

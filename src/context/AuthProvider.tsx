@@ -1,7 +1,7 @@
 "use client";
 
 import { Users } from "@/validations/userModel";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { createContext } from "react";
 
 interface AuthContextState {
@@ -18,9 +18,21 @@ export const AuthContext = createContext<AuthContextState>({
   setUser: () => {},
 });
 
-const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+const AuthProvider = ({
+  children,
+  initialValue,
+}: {
+  children: React.ReactNode;
+  initialValue: Users | null;
+}) => {
   const [user, setUser] = useState<Users | null>(null);
   const [isLoggedIn, setLoggedIn] = useState<boolean>(false);
+  useEffect(() => {
+    if (initialValue) {
+      setLoggedIn(true);
+      setUser({ ...initialValue });
+    }
+  }, []);
 
   return (
     <AuthContext value={{ isLoggedIn, setLoggedIn, user, setUser }}>

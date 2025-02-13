@@ -1,4 +1,4 @@
-import UserTable from "./PageTable";
+import UserTable from "../PageTable";
 
 
 const Page: React.FC = () => {

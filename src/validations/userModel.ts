@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
+const IMAGE_TYPES = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
 
 const Schema = z.object({
     // auto
@@ -8,13 +10,26 @@ const Schema = z.object({
     // required
     full_name: z.string().min(5, 'Full Name must be at least 5 characters long'),
     email: z.string().email('Invalid email format'),
-    phone_number: z.string().nullable(),
-    password: z.string().min(8, 'Minimum length is 8'),
+    password: z
+        .string()
+        .min(8, "Password must be at least 8 characters long")
+        .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+        .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+        .regex(/\d/, "Password must contain at least one number")
+        .regex(/[@$!%*?&]/, "Password must contain at least one special character"),
     // options
+    phone_number: z.string().nullable(),
     date_of_birth: z.string().date("Formate: yyyy-mm-dd or null").nullable(),
     gender: z.enum(["male", "female", "other"]).nullable(),
-    avatar: z.string().url("url or null").nullable(),
-    role: z.enum(["customer", "admin", "owner"]).default('customer'),
+    avatar: z
+        .union([
+            z.instanceof(File)
+                .refine((file) => file.size <= MAX_FILE_SIZE, "Image size must be less than 2MB")
+                .refine((file) => IMAGE_TYPES.includes(file.type), "Invalid image format"),
+            z.null(), // Allow null values
+        ])
+        .optional(),
+    role: z.enum(["customer", "admin"]).default('customer').nullable(),
     // after creation
     last_login: z.string().datetime().nullable(),
     last_password: z.string().nullable(),
@@ -45,7 +60,7 @@ export type User = z.infer<typeof UserSchema>;
 
 // Users Schema without Password
 
-export const UsersSchema = Schema.omit({ password: true,email_callback_url:true })
+export const UsersSchema = Schema.omit({ password: true, email_callback_url: true })
 export type Users = z.infer<typeof UsersSchema>;
 
 // Add User
@@ -85,6 +100,8 @@ export const SignUpUserSchema = Schema.pick({
 });
 export type SignUpUser = z.infer<typeof SignUpUserSchema>;
 
+
+
 // login
 export const LoginUserSchema = Schema.pick({
     email: true,
@@ -93,14 +110,16 @@ export const LoginUserSchema = Schema.pick({
 export type LoginUser = z.infer<typeof LoginUserSchema>;
 
 
-
+// forget pass
 export const ForgotPasswordSchema = Schema.pick({
-    email:true,
-    email_callback_url:true
+    email: true,
+    email_callback_url: true
 })
+
 export type ForgotPassword = z.infer<typeof ForgotPasswordSchema>;
 
+// change pass
 export const ChangePasswordSchema = Schema.pick({
-    password:true,
+    password: true,
 })
 export type ChangePassword = z.infer<typeof ChangePasswordSchema>;

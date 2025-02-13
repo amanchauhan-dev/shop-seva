@@ -1,9 +1,9 @@
-import PageTable from "./PageTable";
+import PageTable from "../PageTable";
 
 const Page: React.FC = () => {
   return (
-    <div>
-      <PageTable />
+    <div className="">
+      <PageTable role="admin" />
     </div>
   );
 };

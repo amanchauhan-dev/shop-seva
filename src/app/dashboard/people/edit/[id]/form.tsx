@@ -26,57 +26,82 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { apiClient, handleApiError } from "@/lib/apiClient";
 import toast from "react-hot-toast";
+import { useParams } from "next/navigation";
+import { formatDate } from "@/lib/dateFunctions";
 
-const AddUserFormSchema = z
-  .object({
-    full_name: z
-      .string()
-      .min(5, "Full name must be at least 5 characters long")
-      .max(20, "Full name must be less than or equal to 100 characters"),
-    phone_number: z
-      .string()
-      .regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number format")
-      .min(10, "Phone number must be at least 10 digits")
-      .max(15, "Phone number must be at most 15 digits"),
-    date_of_birth: z.string().min(3, "Date of birth is required"),
-    email: z.string().email("Invalid email address"),
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters long")
-      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-      .regex(/\d/, "Password must contain at least one number")
-      .regex(
-        /[@$!%*?&]/,
-        "Password must contain at least one special character"
-      ),
-    con_password: z
-      .string()
-      .min(8, "Confirm password must be at least 8 characters long"),
-  })
-  .refine((data) => data.password === data.con_password, {
-    message: "Passwords must match",
-    path: ["con_password"],
-  });
+const UpdateFormSchema = z.object({
+  full_name: z
+    .string()
+    .min(5, "Full name must be at least 5 characters long")
+    .max(20, "Full name must be less than or equal to 100 characters"),
+  phone_number: z
+    .string()
+    .regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number format")
+    .min(10, "Phone number must be at least 10 digits")
+    .max(15, "Phone number must be at most 15 digits"),
+  date_of_birth: z.string().min(3, "Date of birth is required"),
+  email: z.string().email("Invalid email address"),
+  avatar: z
+    .custom<File>(
+      (file) => file instanceof File,
+      "Avatar must be a valid image file"
+    )
+    .refine(
+      (file) => file.size <= 5 * 1024 * 1024,
+      "File size must be less than 5MB"
+    )
+    .refine(
+      (file) => ["image/jpeg", "image/png", "image/gif"].includes(file.type),
+      "Only JPG, PNG, and GIF formats are allowed"
+    )
+    .optional(),
+});
 
-const AddUserForm: React.FC = () => {
+const UpdateUserForm: React.FC = () => {
+  const { id } = useParams();
   const [hydrate, setHydrate] = useState<boolean>(true);
   const [role, setRole] = useState<string>("customer");
-  const [gender, setGender] = useState<string | null>(null);
   const [avatar, setAvatar] = useState<File | null>(null);
+  const [gender, setGender] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
-    reset,
+    setValue,
     formState: { errors },
-  } = useForm<z.infer<typeof AddUserFormSchema>>({
-    resolver: zodResolver(AddUserFormSchema),
+  } = useForm<z.infer<typeof UpdateFormSchema>>({
+    resolver: zodResolver(UpdateFormSchema),
   });
-  
 
+  const fetchUserDetails = async () => {
+    try {
+      const { data } = await apiClient.get("/users/" + id);
+      console.log(data);
+      if (data.user) {
+        setValue("full_name", data?.user?.full_name);
+        setValue("email", data?.user?.email);
+
+        if (data?.user?.date_of_birth) {
+          const date = new Date(data?.user?.date_of_birth);
+          setValue("date_of_birth", formatDate(date));
+        }
+        if (data?.user?.phone_number)
+          setValue("phone_number", data?.user?.phone_number);
+        if (data?.user?.avatar && data?.user?.avatar.length > 0) {
+          setPreview(
+            (process.env.NEXT_PUBLIC_SERVER_URL as string) + data?.user?.avatar
+          );
+        }
+        setRole(data?.user.role);
+        setGender(data?.user.gender);
+      }
+      setHydrate(false);
+    } catch (error) {
+      handleApiError(error);
+    }
+  };
   useEffect(() => {
-    setHydrate(false);
+    fetchUserDetails();
   }, []);
   if (hydrate) {
     return <Skeleton className="w-full h-96 mt-6" />;
@@ -91,11 +116,10 @@ const AddUserForm: React.FC = () => {
       setPreview(previewUrl);
     }
   };
-  
-  // handle submit
 
   const onSubmit = async (data: any) => {
     // console.log("Form Submitted:", data);
+
     const loading = toast.loading("Please wait...");
     try {
       const formData = new FormData();
@@ -104,22 +128,15 @@ const AddUserForm: React.FC = () => {
       formData.set("password", data.password);
       formData.set("phone_number", data.phone_number);
       formData.set("role", role);
+      formData.set("date_of_birth", data.date_of_birth);
       if (gender) formData.set("gender", gender);
-      if (data.date_of_birth) formData.set("date_of_birth", data.date_of_birth);
       if (avatar) formData.set("avatar", avatar);
-
-      await apiClient.post("/users", formData, {
+      await apiClient.put("/users/" + id, formData, {
         headers: {
           "Content-Type": "multipart/formdata",
         },
       });
-
-      toast.success("User created", { id: loading });
-      reset();
-      setPreview(null);
-      setAvatar(null);
-      setRole("customer");
-      setGender(null);
+      toast.success("User Updated", { id: loading });
     } catch (error: any) {
       handleApiError(error, loading);
     }
@@ -193,7 +210,6 @@ const AddUserForm: React.FC = () => {
                 </p>
               )}
             </div>
-
             {/* Email */}
             <div className="flex flex-col gap-1">
               <label htmlFor="email">Email</label>
@@ -240,38 +256,6 @@ const AddUserForm: React.FC = () => {
               )}
             </div>
 
-            {/* Password */}
-            <div className="flex flex-col gap-1">
-              <label htmlFor="password">Password</label>
-              <Input
-                id="password"
-                placeholder="Password"
-                type="password"
-                {...register("password")}
-              />
-              {errors.password && (
-                <p className="text-red-500 text-sm">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
-
-            {/* Confirm Password */}
-            <div className="flex flex-col gap-1">
-              <label htmlFor="con_password">Confirm Password</label>
-              <Input
-                id="con_password"
-                placeholder="Confirm Password"
-                type="password"
-                {...register("con_password")}
-              />
-              {errors.con_password && (
-                <p className="text-red-500 text-sm">
-                  {errors.con_password.message}
-                </p>
-              )}
-            </div>
-
             {/* Role Selection */}
             <div className="flex gap-2 flex-wrap">
               <div className="flex flex-col gap-1">
@@ -300,6 +284,11 @@ const AddUserForm: React.FC = () => {
                 <label htmlFor="gender">Gender</label>
                 <Select
                   name="gender"
+                  value={
+                    gender == "male" || gender == "female" || gender == "other"
+                      ? gender
+                      : "not"
+                  }
                   onValueChange={(value) => {
                     if (value == "not") {
                       setGender(null);
@@ -335,4 +324,4 @@ const AddUserForm: React.FC = () => {
   );
 };
 
-export default AddUserForm;
+export default UpdateUserForm;

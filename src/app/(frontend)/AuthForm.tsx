@@ -15,6 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import { AuthContext } from "@/context/AuthProvider";
 import { apiClient, handleApiError } from "@/lib/apiClient";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export const loginFormSchema = z.object({
   email: z.string().email("Invalid email format"),
@@ -25,7 +26,9 @@ export const LoginFrom: React.FC<{ setOpen: (x: boolean) => void }> = ({
   setOpen,
 }) => {
   const [viewPass, setViewPass] = useState<boolean>(false);
+  const [rememberMe, setRememberMe] = useState<boolean>(false);
   const { setLoggedIn, setUser } = useContext(AuthContext);
+
   const {
     register,
     handleSubmit,
@@ -35,10 +38,13 @@ export const LoginFrom: React.FC<{ setOpen: (x: boolean) => void }> = ({
   });
 
   //  login function
-  const login = async (data:object) => {
+  const login = async (data: object) => {
     const loading = toast.loading("Please wait...");
     try {
-      const res = await apiClient.post("/auth/login", data);
+      const res = await apiClient.post(
+        `/auth/login?rememberMe=${rememberMe}`,
+        data
+      );
       toast.success("Login successful", { id: loading });
       setOpen(false);
       setUser(res.data.user);
@@ -93,6 +99,14 @@ export const LoginFrom: React.FC<{ setOpen: (x: boolean) => void }> = ({
             <p className="text-red-500">{errors.password.message}</p>
           )}
         </div>
+        <div className="mt-4 flex items-center gap-2  pl-1">
+          <Checkbox
+            id="remember"
+            checked={rememberMe}
+            onClick={() => setRememberMe(!rememberMe)}
+          />{" "}
+          <label htmlFor="remember">Remember Me</label>
+        </div>
         <div className="mt-4 flex gap-1 flex-col">
           <Button type="submit" className="w-full">
             Login
@@ -137,8 +151,7 @@ export const RegisterFrom: React.FC = () => {
     resolver: zodResolver(SignupFormSchema),
   });
 
-  const handleSignup = () => {
-  };
+  const handleSignup = () => {};
   return (
     <>
       <DialogHeader>

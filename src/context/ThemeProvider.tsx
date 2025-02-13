@@ -10,8 +10,8 @@ interface ThemeContextState {
   setTheme: Dispatch<SetStateAction<"light" | "dark" | "system">>;
 }
 export const ThemeContext = createContext<ThemeContextState>({
-  theme: "light",
-  systemTheme: "light",
+  theme: "dark",
+  systemTheme: "dark",
   setTheme: () => {},
 });
 

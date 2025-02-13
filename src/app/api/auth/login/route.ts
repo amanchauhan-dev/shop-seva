@@ -60,7 +60,7 @@ export const POST = async (req: NextRequest) => {
             "Set-Cookie",
             serialize("accessToken", accessToken, {
                 httpOnly: true,
-                secure: true,
+                secure: false,
                 path: "/",
                 sameSite: "strict",
                 maxAge: cookieExpire  // 1 hour

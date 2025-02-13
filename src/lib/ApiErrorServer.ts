@@ -11,7 +11,7 @@ export class CustomError extends Error {
     }
 }
 export const ApiErrorServer = (error: any) => {
-    // console.error(error); // Log error for debugging
+    console.log('error', error);
     if (error instanceof ZodError) {
         return NextResponse.json({ errors: error.flatten() }, { status: 400 });
     }
@@ -30,12 +30,11 @@ export const ApiErrorServer = (error: any) => {
         return NextResponse.json({ error: "Email already exists." }, { status: 400 });
     }
 
-    if (error.code === '22P02') {
-        return NextResponse.json({ message: "Invalid uuid" }, { status: 400 });
+    if (error.code === '22P02' || error.code === 'UNDEFINED_VALUE') {
+        return NextResponse.json({ message: "Invalid uuid or data not found",error:error }, { status: 400 });
     }
     if (error.message === 'invalid token') {
         return NextResponse.json({ message: "Invalid token" }, { status: 400 });
     }
-
-    return NextResponse.json({ error: "Something went wrong.", detail: error }, { status: 500 });
+    return NextResponse.json({ error: "Something went wrong.", detail: error, message: error.message }, { status: 500 });
 };

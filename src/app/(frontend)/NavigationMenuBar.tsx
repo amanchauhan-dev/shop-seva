@@ -13,15 +13,8 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { LucideIcon, User } from "lucide-react";
+import {  User } from "lucide-react";
 import { PageDivClassName } from "@/components/PageDiv";
-
-interface Category {
-  category_name: string;
-  url?: string;
-  icons?: LucideIcon;
-  sub_category?: Category[];
-}
 
 
 

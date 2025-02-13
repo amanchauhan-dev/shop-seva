@@ -162,6 +162,8 @@ const UpdateUserForm: React.FC = () => {
                   src={preview}
                   alt="Avatar Preview"
                   className="w-full h-full object-cover"
+                  width={100}
+                  height={100}
                 />
               ) : (
                 <span className="text-gray-500">No Image</span>

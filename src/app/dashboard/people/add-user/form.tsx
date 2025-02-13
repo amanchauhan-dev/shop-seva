@@ -145,6 +145,8 @@ const AddUserForm: React.FC = () => {
                   src={preview}
                   alt="Avatar Preview"
                   className="w-full h-full object-cover"
+                  height={100}
+                  width={100}
                 />
               ) : (
                 <span className="text-gray-500">No Image</span>

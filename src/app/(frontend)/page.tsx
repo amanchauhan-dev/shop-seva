@@ -10,6 +10,7 @@ export default function Home() {
       </div>
       <PageDiv>
         <ProgressBarLink href={"/dashboard"}>Dashboard</ProgressBarLink>
+        <p>Hello World</p>
       </PageDiv>
     </>
   );

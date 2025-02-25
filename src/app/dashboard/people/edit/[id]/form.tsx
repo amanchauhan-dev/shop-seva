@@ -27,8 +27,9 @@ import { useForm } from "react-hook-form";
 import { apiClient, handleApiError } from "@/lib/apiClient";
 import toast from "react-hot-toast";
 import { useParams } from "next/navigation";
-import { formatDate } from "@/lib/dateFunctions";
+import { formatDate } from "@/utils/dateFunctions";
 import Image from "next/image";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const UpdateFormSchema = z.object({
   full_name: z
@@ -61,7 +62,9 @@ const UpdateFormSchema = z.object({
 const UpdateUserForm: React.FC = () => {
   const { id } = useParams();
   const [hydrate, setHydrate] = useState<boolean>(true);
+  const [fetching, setFetching] = useState<boolean>(false);
   const [role, setRole] = useState<string>("customer");
+  const [isActive, setIsActive] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File | null>(null);
   const [gender, setGender] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -76,34 +79,32 @@ const UpdateUserForm: React.FC = () => {
 
   const fetchUserDetails = async () => {
     try {
-      const { data } = await apiClient.get("/users/" + id);
-      console.log(data);
-      if (data.user) {
-        setValue("full_name", data?.user?.full_name);
-        setValue("email", data?.user?.email);
-
-        if (data?.user?.date_of_birth) {
-          const date = new Date(data?.user?.date_of_birth);
+      const res = await apiClient.get("/users/" + id);
+      if (res.data) {
+        const data = res.data.data;
+        setValue("full_name", data?.full_name);
+        setValue("email", data?.email);
+        setIsActive(data?.is_active);
+        if (data?.date_of_birth) {
+          const date = new Date(data?.date_of_birth);
           setValue("date_of_birth", formatDate(date));
         }
-        if (data?.user?.phone_number)
-          setValue("phone_number", data?.user?.phone_number);
-        if (data?.user?.avatar && data?.user?.avatar.length > 0) {
-          setPreview(
-            (process.env.NEXT_PUBLIC_SERVER_URL as string) + data?.user?.avatar
-          );
-        }
-        setRole(data?.user.role);
-        setGender(data?.user.gender);
+        if (data?.phone_number) setValue("phone_number", data?.phone_number);
+        if (data?.avatar && data?.avatar.length > 0) setPreview(data?.avatar);
+
+        if (data.role) setRole(data.role);
+        if (data.gender) setGender(data.gender);
       }
       setHydrate(false);
     } catch (error) {
       handleApiError(error);
     }
   };
+
   useEffect(() => {
     fetchUserDetails();
   }, []);
+
   if (hydrate) {
     return <Skeleton className="w-full h-96 mt-6" />;
   }
@@ -119,26 +120,30 @@ const UpdateUserForm: React.FC = () => {
   };
 
   const onSubmit = async (data: any) => {
-    // console.log("Form Submitted:", data);
-
     const loading = toast.loading("Please wait...");
+    setFetching(true);
     try {
       const formData = new FormData();
       formData.set("full_name", data.full_name);
       formData.set("email", data.email);
+      formData.set("is_active", isActive ? "true" : "false");
       formData.set("password", data.password);
       formData.set("phone_number", data.phone_number);
       formData.set("role", role);
       formData.set("date_of_birth", data.date_of_birth);
+      if (preview) formData.set("avatarURL", preview);
       if (gender) formData.set("gender", gender);
       if (avatar) formData.set("avatar", avatar);
+
       await apiClient.put("/users/" + id, formData, {
         headers: {
           "Content-Type": "multipart/formdata",
         },
       });
+      setFetching(false);
       toast.success("User Updated", { id: loading });
     } catch (error: any) {
+      setFetching(false);
       handleApiError(error, loading);
     }
   };
@@ -197,6 +202,7 @@ const UpdateUserForm: React.FC = () => {
               className="mt-2 hidden"
             />
           </div>
+          {/* details */}
           <div className="col-span-2 grid grid-cols-2 gap-5 max-sm:col-span-1 max-lg:grid-cols-1">
             {/* Full Name */}
             <div className="flex flex-col gap-1 col-span-1">
@@ -258,7 +264,6 @@ const UpdateUserForm: React.FC = () => {
                 </p>
               )}
             </div>
-
             {/* Role Selection */}
             <div className="flex gap-2 flex-wrap">
               <div className="flex flex-col gap-1">
@@ -276,7 +281,6 @@ const UpdateUserForm: React.FC = () => {
                       <SelectLabel>Roles</SelectLabel>
                       <SelectItem value="customer">Customer</SelectItem>
                       <SelectItem value="admin">Admin</SelectItem>
-                      <SelectItem value="owner">Owner</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -316,9 +320,18 @@ const UpdateUserForm: React.FC = () => {
               </div>
             </div>
           </div>
+          <div className="flex gap-2 sm:col-span-3 col-span-1 flex-wrap justify-end items-center">
+            <Checkbox
+              checked={isActive}
+              onClick={() => setIsActive(!isActive)}
+            />
+            Active (User will not able to login is not checked)
+          </div>
           {/* Submit Button */}
           <div className="flex gap-2 sm:col-span-3 col-span-1 flex-wrap justify-end">
-            <Button type="submit">Update</Button>
+            <Button disabled={fetching} type="submit">
+              Update
+            </Button>
           </div>
         </form>
       </CardContent>

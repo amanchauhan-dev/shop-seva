@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ForgotPassword, ForgotPasswordSchema } from "@/validations/userModel";
+import { ForgotPassword, ForgotPasswordSchema } from "@/validations/user";
 import sql from "@/lib/db";
 import { SendForgotPasswordMail } from "@/lib/mailer";
 import { ApiErrorServer } from "@/lib/ApiErrorServer";

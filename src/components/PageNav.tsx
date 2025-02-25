@@ -22,7 +22,7 @@ const PageNav: React.FC<PageNavProps> = ({ data }) => {
             <ProgressBarLink
               key={i}
               className={`${
-                path == e.url ? "bg-primary text-white" : "bg-sidebar hover:bg-transparent"
+                path == e.url ? "bg-primary text-white border-primary" : "bg-sidebar hover:border-primary"
               }  transition-colors shadow-md rounded  p-0.5 sm:p-1.5 whitespace-nowrap  px-2 sm:px-3 border-2 border-sidebar `}
               href={e.url}
             >

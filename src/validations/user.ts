@@ -7,6 +7,7 @@ const Schema = z.object({
     // auto
     id: z.string().uuid(),
     created_at: z.string().datetime(),
+    updated_at: z.string().datetime(),
     // required
     full_name: z.string().min(5, 'Full Name must be at least 5 characters long'),
     email: z.string().email('Invalid email format'),
@@ -36,6 +37,7 @@ const Schema = z.object({
     email_verified: z.boolean().default(false),
     email_verify_token: z.string().nullable(),
     forgot_password_token: z.string().nullable(),
+    is_active: z.enum(['true', 'false']).nullable(),
     //   email callback url -- server use
     email_callback_url: z.string().url("Url or empty").nullable(),
 });
@@ -43,10 +45,12 @@ const Schema = z.object({
 
 export const PrivateFields = ["password", 'forgot_password_token', 'email_verify_token', 'last_password'];
 
-export const PublicUserFieldNames = ['id', 'created_at', 'full_name', 'email', 'phone_number', 'date_of_birth', 'gender', 'avatar', 'role', 'last_login', 'email_verified']
-
+export const PublicUserFieldNames = ['id', 'created_at', 'full_name', 'email', 'phone_number', 'date_of_birth', 'gender', 'avatar', 'role', 'last_login', 'email_verified', 'is_active', 'updated_at'];
+// for search user
 export const FilterUserSchema = z.object({
     role: z.enum(["customer", "admin", "owner"]).optional(),
+    gender: z.enum(["male", "female", "other", 'unknown']).optional(),
+    is_active: z.enum(["true", "false"]).optional(),
     email_verified: z.preprocess((v) => v === "true", z.boolean()).optional(),
     search: z.string().optional(),
     page: z.preprocess((v) => Number(v), z.number().int().positive().default(1)),
@@ -72,7 +76,8 @@ export const AddUserSchema = Schema.pick({
     role: true,
     gender: true,
     date_of_birth: true,
-    avatar: true
+    avatar: true,
+    is_active: true,
 });
 export type AddUser = z.infer<typeof AddUserSchema>;
 
@@ -84,8 +89,11 @@ export const UpdateUserSchema = Schema.pick({
     role: true,
     gender: true,
     date_of_birth: true,
-    avatar: true
-});
+    avatar: true,
+    is_active: true
+}).extend({
+    avatarURL: z.string().nullable()
+})
 export type UpdateUser = z.infer<typeof UpdateUserSchema>;
 
 

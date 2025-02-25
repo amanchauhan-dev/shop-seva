@@ -1,4 +1,4 @@
-import { nameToColor } from "@/lib/colorGenerator";
+import { nameToColor } from "@/utils/colorGenerator";
 import Image from "next/image";
 
 interface AvatarProps {

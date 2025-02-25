@@ -29,9 +29,12 @@ export const ApiErrorServer = (error: any) => {
     if (error.code === '23505') {
         return NextResponse.json({ error: "Email already exists." }, { status: 400 });
     }
+    if (error.code === '23503') {
+        return NextResponse.json({ error: error.detail }, { status: 400 });
 
+    }
     if (error.code === '22P02' || error.code === 'UNDEFINED_VALUE') {
-        return NextResponse.json({ message: "Invalid uuid or data not found",error:error }, { status: 400 });
+        return NextResponse.json({ message: "Invalid uuid or data not found", error: error }, { status: 400 });
     }
     if (error.message === 'invalid token') {
         return NextResponse.json({ message: "Invalid token" }, { status: 400 });

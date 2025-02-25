@@ -27,6 +27,7 @@ import { useForm } from "react-hook-form";
 import { apiClient, handleApiError } from "@/lib/apiClient";
 import toast from "react-hot-toast";
 import Image from "next/image";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const AddUserFormSchema = z
   .object({
@@ -65,6 +66,7 @@ const AddUserForm: React.FC = () => {
   const [role, setRole] = useState<string>("customer");
   const [gender, setGender] = useState<string | null>(null);
   const [avatar, setAvatar] = useState<File | null>(null);
+  const [isActive, setIsActive] = useState<boolean>(false);
   const [preview, setPreview] = useState<string | null>(null);
   const {
     register,
@@ -74,7 +76,6 @@ const AddUserForm: React.FC = () => {
   } = useForm<z.infer<typeof AddUserFormSchema>>({
     resolver: zodResolver(AddUserFormSchema),
   });
-  
 
   useEffect(() => {
     setHydrate(false);
@@ -92,7 +93,7 @@ const AddUserForm: React.FC = () => {
       setPreview(previewUrl);
     }
   };
-  
+
   // handle submit
 
   const onSubmit = async (data: any) => {
@@ -103,6 +104,7 @@ const AddUserForm: React.FC = () => {
       formData.set("full_name", data.full_name);
       formData.set("email", data.email);
       formData.set("password", data.password);
+      formData.set("is_active", isActive? 'true': 'false');
       formData.set("phone_number", data.phone_number);
       formData.set("role", role);
       if (gender) formData.set("gender", gender);
@@ -276,56 +278,59 @@ const AddUserForm: React.FC = () => {
             </div>
 
             {/* Role Selection */}
-            <div className="flex gap-2 flex-wrap">
-              <div className="flex flex-col gap-1">
-                <label htmlFor="role">Role</label>
-                <Select
-                  name="role"
-                  value={role}
-                  onValueChange={(value) => setRole(value)}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select A Role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Roles</SelectLabel>
-                      <SelectItem value="customer">Customer</SelectItem>
-                      <SelectItem value="admin">Admin</SelectItem>
-                      <SelectItem value="owner">Owner</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Gender Selection */}
-              <div className="flex gap-1 flex-col">
-                <label htmlFor="gender">Gender</label>
-                <Select
-                  name="gender"
-                  onValueChange={(value) => {
-                    if (value == "not") {
-                      setGender(null);
-                    } else {
-                      setGender(value);
-                    }
-                  }}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select A Gender" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Gender</SelectLabel>
-                      <SelectItem value="not">Not want to tell</SelectItem>
-                      <SelectItem value="male">Male</SelectItem>
-                      <SelectItem value="female">Female</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="flex flex-col gap-1">
+              <label htmlFor="role">Role</label>
+              <Select
+                name="role"
+                value={role}
+                onValueChange={(value) => setRole(value)}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select A Role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Roles</SelectLabel>
+                    <SelectItem value="customer">Customer</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
+            {/* Gender Selection */}
+            <div className="flex gap-1 flex-col">
+              <label htmlFor="gender">Gender</label>
+              <Select
+                name="gender"
+                onValueChange={(value) => {
+                  if (value == "not") {
+                    setGender(null);
+                  } else {
+                    setGender(value);
+                  }
+                }}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select A Gender" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Gender</SelectLabel>
+                    <SelectItem value="not">Not want to tell</SelectItem>
+                    <SelectItem value="male">Male</SelectItem>
+                    <SelectItem value="female">Female</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="flex gap-2 sm:col-span-3 col-span-1 flex-wrap justify-end items-center">
+            <Checkbox
+              checked={isActive}
+              onClick={() => setIsActive(!isActive)}
+            />
+            Active (User will not able to login is not checked)
           </div>
           {/* Submit Button */}
           <div className="flex gap-2 sm:col-span-3 col-span-1 flex-wrap justify-end">

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import jwt from 'jsonwebtoken'
 import sql from "@/lib/db";
-import { ChangePasswordSchema } from "@/validations/userModel";
+import { ChangePasswordSchema } from "@/validations/user";
 import { ApiErrorServer } from "@/lib/ApiErrorServer";
 export async function POST(req: NextRequest) {
     try {

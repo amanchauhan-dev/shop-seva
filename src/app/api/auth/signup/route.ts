@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { SignUpUser, SignUpUserSchema } from "@/validations/userModel";
+import { SignUpUser, SignUpUserSchema } from "@/validations/user";
 import sql from "@/lib/db";
 import { genSaltSync, hashSync } from 'bcrypt'
 import { SendEmailVerifyMail } from "@/lib/mailer";

@@ -2,8 +2,8 @@ import { ApiErrorServer } from "@/lib/ApiErrorServer";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from 'jsonwebtoken'
 import sql from "@/lib/db";
-import { PublicUserFieldNames, User } from "@/validations/userModel";
-import { filterObject } from "@/lib/utils";
+import { PublicUserFieldNames, User } from "@/validations/user";
+import { filterObject } from "@/utils/utils";
 
 export async function GET(req: NextRequest) {
     try {

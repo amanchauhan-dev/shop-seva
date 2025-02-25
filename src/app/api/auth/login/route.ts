@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { LoginUserSchema, PublicUserFieldNames, User } from "@/validations/userModel";
+import { LoginUserSchema, PublicUserFieldNames } from "@/validations/user";
 import sql from "@/lib/db";
 import { compareSync } from "bcrypt";
 import jwt from 'jsonwebtoken'
 import { serialize } from "cookie";
 import { ApiErrorServer, CustomError } from "@/lib/ApiErrorServer";
-import { filterObject } from "@/lib/utils";
+import { filterObject } from "@/utils/utils";
 
 export const POST = async (req: NextRequest) => {
     try {
@@ -15,10 +15,10 @@ export const POST = async (req: NextRequest) => {
         // validate
         const data = LoginUserSchema.parse(body)
         // fetch user
-        const user: User = await sql`
+        const user = await sql`
                 SELECT *
                 FROM users 
-                WHERE email = ${data.email} AND email_verified = true
+                WHERE email = ${data.email} AND is_active=true
         `
 
         if (user.length == 0) {

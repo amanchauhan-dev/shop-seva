@@ -142,17 +142,10 @@ export const NavigationData = {
           url: "/dashboard/brands-categories/brands",
         },
         {
-          title: "Drafts or Inactive",
-          url: "/dashboard/brands-categories/inactive-draft",
+          title: "Labels",
+          url: "/dashboard/brands-categories/labels",
         },
-        {
-          title: "Add Brand",
-          url: "/dashboard/brands-categories/add-brand",
-        },
-        {
-          title: "Add Category",
-          url: "/dashboard/brands-categories/add-category",
-        },
+     
       ],
     },
     {

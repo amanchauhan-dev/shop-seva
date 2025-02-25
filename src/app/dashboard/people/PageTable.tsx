@@ -27,68 +27,122 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { apiClient, handleApiError } from "@/lib/apiClient";
-import { EllipsisVertical, Minus, Search } from "lucide-react";
+import { EllipsisVertical, Minus, RefreshCcw, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import { ProgressBarLink } from "@/context/ProgressBar";
 import Avatar from "@/components/Avatar";
-import { User } from "@/lib/frontendTypes";
+import { User } from "@/utils/frontendTypes";
 import { Input } from "@/components/ui/input";
+import { useDebounce } from "react-haiku";
+import usePaginatedGet from "@/hooks/usePaginatedGet";
 
-const PageTable: React.FC<{ role?: string }> = ({ role }) => {
-  const [hydrate, setHydrate] = useState<boolean>(true);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [users, setUsers] = useState<User[]>([]);
-  const [totalPage, setTotalPage] = useState<number>(1);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(10);
-  const FetchUsers = async () => {
-    try {
-      setLoading(true);
-      const { data } = await apiClient.get(
-        `/users?page=${currentPage}&limit=${limit}${
-          role && role.length > 0 ? "&role=" + role : ""
-        }`
-      );
-      if (data.users && data.users.length == 0) {
-        setLoading(false);
-        setTotalPage(1);
-        setCurrentPage(1);
-        return;
-      }
-      setUsers([...data?.users]);
-      setTotalPage(Math.ceil(data.total / limit));
+const PageTable: React.FC<{
+  role?: string | null;
+  is_active?: "true" | "false" | null;
+}> = ({ role = null, is_active = null }) => {
+  // states
+  const [search, setSearch] = useState<string>("");
+  const debounceSearchedTerm = useDebounce<string>(search, 1000);
+  const [selectedGender, setSelectedGender] = useState<
+    "all" | "male" | "female" | "other" | "unknown"
+  >("all");
+  const [selectedRole, setSelectedRole] = useState<
+    "all" | "customer" | "admin"
+  >("all");
 
-      setLoading(false);
-    } catch (error: any) {
-      handleApiError(error);
-      setLoading(false);
+  // building query
+  const buildApiPath = ({
+    page,
+    limit,
+  }: {
+    page: number;
+    limit: number;
+    queryParams?: Record<string, any>;
+  }) => {
+    const params = new URLSearchParams();
+    params.append("page", page.toString());
+    params.append("limit", limit.toString());
+    params.append("search", debounceSearchedTerm);
+    // role
+    if (role && role.length > 0) params.append("role", role); // page role
+    if (selectedRole != "all") params.append("role", selectedRole); // over write with filter
+    // gender
+    if (selectedGender != "all") {
+      params.append("gender", selectedGender); // over write with filter
     }
+    // Active or Not
+    if (is_active && is_active.length > 0)
+      params.append("is_active", is_active);
+    return `/users?${params.toString()}`;
   };
-  useEffect(() => {
-    setHydrate(false);
-  }, []);
-  useEffect(() => {
-    FetchUsers();
-  }, [currentPage, limit]);
 
-  if (!hydrate)
+  // call paginated api hook
+  const {
+    data: users,
+    // total,
+    hydrated,
+    page,
+    totalPage,
+    limit,
+    loading,
+    refresh,
+    setPage,
+    setLimit,
+    setQueryParams,
+  } = usePaginatedGet<User>(buildApiPath, {
+    initialPage: 1,
+    initialLimit: 10,
+    initialQueryParams: { search: debounceSearchedTerm },
+  });
+
+  useEffect(() => {
+    setQueryParams({
+      search: debounceSearchedTerm,
+      gender: selectedGender,
+      role: selectedRole,
+    });
+  }, [debounceSearchedTerm, selectedRole, selectedGender]);
+
+  // tsx
+  if (hydrated)
     return (
       <>
-        <div className="flex border-2 rounded-md border-1 max-w-[350px] sm:max-w-[500px] lg:max-w-[600px] xl:max-w-[800px] items-center  mx-auto mb-4 px-2">
+        <div className="flex border-2 bg-card rounded-md border-1 max-w-[350px] sm:max-w-[500px] lg:max-w-[600px] xl:max-w-[800px] items-center  mx-auto mb-4 px-2">
           <Search className="text-border" />
-          <Input className="border-0 outline-0 focus:!border-0 focus-visible:ring-0" placeholder="Search for a person" />
+          <Input
+            className="border-0 outline-0 focus:!border-0 focus-visible:ring-0 "
+            placeholder="Search for a person"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          {search.length > 0 && (
+            <X
+              className="text-border cursor-pointer"
+              onClick={() => setSearch("")}
+            />
+          )}
         </div>
         <Table className="overflow-auto">
           <TableCaption>A list of your recent users</TableCaption>
           <TableHeader>
             <TableRow>
+              <TableHead className="flex items-center gap-2">
+                <RefreshCcw
+                  size={15}
+                  className="cursor-pointer "
+                  onClick={refresh}
+                />
+              </TableHead>
+            </TableRow>
+            <TableRow>
               <TableHead className="">Avatar</TableHead>
               <TableHead className="">Full Name</TableHead>
               <TableHead className="">Email</TableHead>
               <TableHead className="text-center">
-                <Select>
+                <Select
+                  onValueChange={(value) => setSelectedGender(value as any)}
+                >
                   <SelectTrigger className="w-[100px] m-auto border-0">
                     <SelectValue placeholder="Gender" />
                   </SelectTrigger>
@@ -97,16 +151,18 @@ const PageTable: React.FC<{ role?: string }> = ({ role }) => {
                       <SelectLabel>Roles</SelectLabel>
                       <SelectItem value="all">All</SelectItem>
                       <SelectItem value="unknown">Unknown</SelectItem>
-                      <SelectItem value="banana">Male</SelectItem>
-                      <SelectItem value="blueberry">Female</SelectItem>
-                      <SelectItem value="grapes">Others</SelectItem>
+                      <SelectItem value="male">Male</SelectItem>
+                      <SelectItem value="female">Female</SelectItem>
+                      <SelectItem value="other">Others</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
               </TableHead>
               <TableHead className="text-right">Phone Number</TableHead>
               <TableHead className="text-right">
-                <Select>
+                <Select
+                  onValueChange={(value) => setSelectedRole(value as any)}
+                >
                   <SelectTrigger className="w-[90px] ml-auto border-0">
                     <SelectValue placeholder="Role" />
                   </SelectTrigger>
@@ -114,9 +170,8 @@ const PageTable: React.FC<{ role?: string }> = ({ role }) => {
                     <SelectGroup>
                       <SelectLabel>Roles</SelectLabel>
                       <SelectItem value="all">All</SelectItem>
-                      <SelectItem value="banana">Customers</SelectItem>
-                      <SelectItem value="blueberry">Employees</SelectItem>
-                      <SelectItem value="grapes">Admin</SelectItem>
+                      <SelectItem value="customer">Customers</SelectItem>
+                      <SelectItem value="admin">Employees</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -167,9 +222,9 @@ const PageTable: React.FC<{ role?: string }> = ({ role }) => {
                 <Pagination
                   limit={limit}
                   setLimit={setLimit}
-                  currentPage={currentPage}
+                  currentPage={page}
                   total={totalPage}
-                  setCurrentPage={setCurrentPage}
+                  setCurrentPage={setPage}
                 />
               </TableCell>
             </TableRow>

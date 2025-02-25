@@ -1,8 +1,8 @@
 import { ApiErrorServer } from "@/lib/ApiErrorServer";
 import sql from "@/lib/db";
-import { saveFiles } from "@/lib/uploader";
-import { filterObject } from "@/lib/utils";
-import { PublicUserFieldNames, UpdateUserSchema } from "@/validations/userModel";
+import { backendClient } from "@/lib/edgestore-server";
+import { filterObject } from "@/utils/utils";
+import { PublicUserFieldNames, UpdateUserSchema } from "@/validations/user";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -13,9 +13,9 @@ export async function GET(req: NextRequest, context: any) {
         SELECT ${sql(PublicUserFieldNames)} FROM users WHERE id = ${id}
         `
         if (user.length == 0) {
-            return NextResponse.json({ message: "User not found" });
+            return NextResponse.json({ message: "User not found", data: [] });
         }
-        return NextResponse.json({ message: "User found", user: user[0] });
+        return NextResponse.json({ message: "User found", data: user[0] });
     } catch (error) {
         return ApiErrorServer(error)
     }
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest, context: any) {
 }
 
 
-export const PUT = async (req: NextRequest, context:any) => {
+export const PUT = async (req: NextRequest, context: any) => {
     try {
         const { id } = await context.params
         const form = await req.formData();
@@ -36,37 +36,59 @@ export const PUT = async (req: NextRequest, context:any) => {
             phone_number: form.get('phone_number'),
             gender: form.get('gender'),
             date_of_birth: form.get('date_of_birth'),
-            avatar: file
+            avatar: file,
+            is_active: form.get('is_active'),
+            avatarURL: form.get('avatarURL'),
         })
         let uploadResponse = null
         if (file) {
-            uploadResponse = await saveFiles(file)
-            uploadResponse = uploadResponse[0]
+            uploadResponse = await backendClient.publicFiles.upload({
+                content: {
+                    blob: new Blob([file], { type: "image/*" }),
+                    extension: "png",
+                }
+            });
+        }
+        const updatedUser = await sql`
+                                WITH previous_data AS (
+                                    SELECT avatar as prev_avatar, id FROM users WHERE id = ${id}
+                                ),
+                                updated_data AS (
+                                    UPDATE users 
+                                    SET
+                                        full_name = ${data.full_name},
+                                        email = ${data.email},
+                                        phone_number = ${data.phone_number},
+                                        date_of_birth = ${data.date_of_birth},
+                                        avatar = ${uploadResponse?.url || data.avatarURL || null},
+                                        gender = ${data.gender},
+                                        role = ${data.role},
+                                        is_active = ${data.is_active == 'true' ? true : false}
+                                    WHERE id = ${id}
+                                    RETURNING *
+                                )
+                                SELECT 
+                                    p.*,  -- Previous data
+                                    u.*   -- Updated data
+                                FROM previous_data p
+                                JOIN updated_data u ON p.id = u.id;
+        `;
+
+        const user = filterObject(updatedUser[0], PublicUserFieldNames)
+        // delete last avatar 
+        if (updatedUser.length > 0 && updatedUser[0].prev_avatar && updatedUser[0].prev_avatar.length) {
+            await backendClient.publicFiles.deleteFile({ url: updatedUser[0].prev_avatar });
         }
 
-        const updatedUser = await sql`
-                        UPDATE users 
-                        SET
-                            full_name=${data.full_name},
-                            email=${data.email},
-                            phone_number=${data.phone_number},
-                            date_of_birth= ${data.date_of_birth},
-                            ${uploadResponse ? sql`avatar = ${uploadResponse},` : sql``}
-                            gender=${data.gender},
-                            role= ${data.role}
-                        WHERE id = ${id}
-                       RETURNING *, avatar AS previous_avatar;
-        `
-        const user = filterObject(updatedUser[0], PublicUserFieldNames)
-        return NextResponse.json({ message: "User Updated successfully", updatedUser: user })
+        return NextResponse.json({
+            message: "User Updated successfully", data: user
+        })
     } catch (error) {
         return ApiErrorServer(error)
     }
 }
 
-
-
-export async function DELETE(req: NextRequest, context: any ) {
+export async function DELETE(req: NextRequest, context: any) {
     try {
         const { id } = await context.params;
         const data = await sql`
@@ -75,7 +97,7 @@ export async function DELETE(req: NextRequest, context: any ) {
         `
         const user = filterObject(data[0], PublicUserFieldNames)
 
-        return NextResponse.json({ message: "User deleted successfully", user: user[0] });
+        return NextResponse.json({ message: "User deleted successfully", data: user[0] });
     } catch (error) {
         return ApiErrorServer(error)
     }

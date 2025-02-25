@@ -1,6 +1,6 @@
 "use client";
 
-import { Users } from "@/validations/userModel";
+import { Users } from "@/validations/user";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { createContext } from "react";
 

@@ -4,8 +4,8 @@
 
 @layer base {
   :root {
-    --navigation: #9a5bff;
-    --background: #ffffff; /* 0 0% 100% */
+    --navigation: #15803d;
+    --background: #f1f1f1; /* 0 0% 100% */
     --foreground: #1c1c1c; /* 240 10% 3.9% */
     --card: #ffffff; /* 0 0% 100% */
     --card-foreground: #1c1c1c; /* 240 10% 3.9% */
@@ -30,7 +30,7 @@
     --chart-4: #a6d607; /* 43 74% 66% */
     --chart-5: #ffea36; /* 27 87% 67% */
     --radius: 0.5rem;
-    --sidebar-background: var(--secondary);
+    --sidebar-background: #ffff;
     --sidebar-foreground: #1c1c1c;
     --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: var(--primary-foreground);
@@ -41,7 +41,7 @@
   }
 
   .dark {
-    --navigation: #6d28d9;
+    --navigation: #16a34a;
     --background: #1c1c1c; /* 240 10% 3.9% */
     --foreground: #fafafa; /* 0 0% 98% */
     --card: #1c1c1c; /* 240 10% 3.9% */
@@ -93,6 +93,17 @@
 
 ::-webkit-scrollbar-thumb {
   background-color: var(--border);
+}
+
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
 
